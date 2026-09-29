@@ -1,27 +1,62 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "ES2022"],
-    // This is an app, not a published library — no .d.ts output is ever
-    // needed. Also sidesteps TS2742 ("inferred type cannot be named without
-    // a reference to .../node_modules/...") that `declaration: true`
-    // (inherited from tsconfig.base.json) triggers on NextAuth v5's `auth`/
-    // `signIn` exports under bun's isolated node_modules layout.
-    "declaration": false,
-    "declarationMap": false,
     "module": "esnext",
     "moduleResolution": "bundler",
-    "types": ["node", "bun", "react", "react-dom"],
-    "jsx": "preserve",
-    "noEmit": true,
+    "customConditions": [
+      "bun"
+    ],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2022"
+    ],
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    // This is an app, not a published library — no .d.ts output is ever
+    // needed. Also sidesteps TS2742 ("inferred type cannot be named without
+    // a reference to .../node_modules/...") that `declaration: true` would
+    // trigger on NextAuth v5's `auth`/`signIn` exports under bun's isolated
+    // node_modules layout.
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": true,
+    "types": [
+      "node",
+      "bun",
+      "react",
+      "react-dom"
+    ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": true,
+    "preserveConstEnums": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "verbatimModuleSyntax": true,
     "incremental": true,
+    "noEmit": true,
     "isolatedModules": true,
     "allowJs": false,
     "allowImportingTsExtensions": false,
-    "plugins": [{ "name": "next" }],
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
-      "#/*": ["./src/*"]
+      "#/*": [
+        "./src/*"
+      ]
     }
   },
   "include": [
@@ -33,5 +68,8 @@
     "tests/**/*.tsx",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", ".next"]
+  "exclude": [
+    "node_modules",
+    ".next"
+  ]
 }

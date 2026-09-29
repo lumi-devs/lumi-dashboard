@@ -1,0 +1,13 @@
+node_modules/
+dist/
+tmp/
+coverage/
+.turbo/
+*.tsbuildinfo
+.next/
+next-env.d.ts
+.env
+*.log
+logs/
+.claude/
+.agents/

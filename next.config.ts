@@ -1,4 +1,3 @@
-import path from "node:path";
 import type { NextConfig } from "next";
 
 // Content-Security-Policy is deliberately not here — it needs a per-request
@@ -17,12 +16,9 @@ const securityHeaders: { key: string; value: string }[] = [
   },
 ];
 
-const RepoRoot = path.join(import.meta.dirname, "../..");
-
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
-  outputFileTracingRoot: RepoRoot,
   // The legal pages read these with fs at request time, which the tracer can't follow.
   outputFileTracingIncludes: {
     "/legal/*": ["./content/legal/**"],
@@ -38,9 +34,7 @@ const nextConfig: NextConfig = {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
   turbopack: {
-    // Pinned: another bun.lock anywhere above this directory makes Turbopack's
-    // automatic root inference pick the wrong repo copy.
-    root: path.join(import.meta.dirname, "../.."),
+    root: import.meta.dirname,
   },
 };
 
