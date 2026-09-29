@@ -4,6 +4,7 @@ RUN apk add --no-cache dumb-init
 
 FROM base AS deps
 COPY package.json bun.lock .npmrc ./
+COPY patches/ patches/
 # NODE_AUTH_TOKEN authenticates against npm.pkg.github.com to pull the
 # @lumi-devs/contracts and @lumi-devs/observability packages (.npmrc reads it
 # from the env). Passed as a BuildKit secret so it never lands in an image
