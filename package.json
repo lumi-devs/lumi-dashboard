@@ -19,8 +19,8 @@
     "test": "bun test --parallel"
   },
   "dependencies": {
-    "@lumi/contracts": "npm:@lumi-devs/contracts@0.5.0-next.0",
-    "@lumi/observability": "npm:@lumi-devs/observability@0.5.0-next.0",
+    "@lumi/contracts": "npm:@lumi-devs/contracts@0.5.0-next.1",
+    "@lumi/observability": "npm:@lumi-devs/observability@0.5.0-next.1",
     "@tanstack/react-table": "9.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -53,9 +53,5 @@
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.69.0"
-  },
-  "patchedDependencies": {
-    "@lumi-devs/contracts@0.5.0-next.0": "patches/@lumi-devs%2Fcontracts@0.5.0-next.0.patch",
-    "@lumi-devs/observability@0.5.0-next.0": "patches/@lumi-devs%2Fobservability@0.5.0-next.0.patch"
   }
 }
