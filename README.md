@@ -87,6 +87,17 @@ docker buildx build --target dashboard \
 The `NODE_AUTH_TOKEN` is only used inside the `deps` build stage (to install the private
 packages) via a BuildKit secret mount — it is never written into an image layer.
 
+## Repository secrets
+
+| Secret | Scope | Used by |
+| :--- | :--- | :--- |
+| `DEPENDABOT_TOKEN` | Dependabot | Classic PAT with only `read:packages`. Dependabot does not receive `GITHUB_TOKEN`, and GitHub Packages' npm registry requires auth even for public packages, so without it every npm update run fails to resolve `@lumi-devs/*`. Rotate it before the PAT expires. |
+
+CI and the Docker workflow need no extra secrets: they authenticate to GitHub Packages with
+the workflow's own `GITHUB_TOKEN`, which works because this repository has read access on the
+`contracts`/`observability` packages and write access on the `lumi-dashboard` image package
+(each package's **Manage Actions access** setting).
+
 ## License
 
 GPL-3.0-only, matching the main [Lumi](https://github.com/lumi-devs/Lumi) repository.
