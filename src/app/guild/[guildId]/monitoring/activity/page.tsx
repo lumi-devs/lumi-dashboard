@@ -41,12 +41,12 @@ export default async function GuildActivityPage({
       rpc("guild.cases.list", {
         guildId,
         actorId: session.userId,
-        data: { page: 1, pageSize: RecordWindow },
+        data: { pageSize: RecordWindow },
       }),
       rpc("guild.audit.list", {
         guildId,
         actorId: session.userId,
-        data: { page: 1, pageSize: RecordWindow },
+        data: { pageSize: RecordWindow },
       }),
     ]);
   } catch (err) {

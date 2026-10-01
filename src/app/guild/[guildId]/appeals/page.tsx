@@ -20,10 +20,10 @@ import { LoadFailure } from "#/components/ui/load-failure";
 import { ExportLogButton } from "#/components/ui/export-log-button";
 import { FilterBar } from "#/components/ui/filter-bar";
 import { PageHeader } from "#/components/ui/page-header";
-import { Pagination } from "#/components/ui/pagination";
+import { CursorPagination } from "#/components/ui/pagination";
 import type { AppealsListData, AppealView } from "@lumi/contracts/views";
 import { AppealStatusOptions, isAppealStatus } from "#/lib/appeals";
-import { countBy, extractMemberNames, pageNumber, single } from "#/lib/log-format";
+import { countBy, extractMemberNames, single } from "#/lib/log-format";
 
 const PageSize = 25;
 
@@ -40,15 +40,15 @@ export default async function AppealsPage({
 
   const statusParam = single(query["status"]);
   const status = isAppealStatus(statusParam) ? statusParam : undefined;
-  const page = pageNumber(single(query["page"]));
+  const cursor = single(query["cursor"]);
 
   const entitiesPromise = getGuildEntities(guildId, session.userId);
   const appealsPromise = rpc("guild.appeals.list", {
     guildId,
     actorId: session.userId,
     data: {
-      page,
       pageSize: PageSize,
+      ...(cursor ? { cursor } : {}),
       ...(status ? { status } : {}),
     },
   });
@@ -79,10 +79,12 @@ export default async function AppealsPage({
             actions={
               data ? (
                 <>
-                  <Badge variant="neutral" className="tabular">
-                    {data.total} total
-                  </Badge>
-                  {data.total > 0 ? (
+                  {data.total !== undefined ? (
+                    <Badge variant="neutral" className="tabular">
+                      {data.total} total
+                    </Badge>
+                  ) : null}
+                  {data.appeals.length > 0 ? (
                     <ExportLogButton<AppealView>
                       label="Download"
                       filename={`lumi-appeals-${guildId}-${Date.now()}.json`}
@@ -134,12 +136,12 @@ export default async function AppealsPage({
                 memberNames={memberNames}
               />
             </>
-          ) : data && data.total > 0 ? (
+          ) : data && cursor ? (
             <EmptyState
               compact
               icon={SearchX}
-              title="This page is past the end of the list"
-              description={`The list holds ${data.total} appeal${data.total === 1 ? "" : "s"}. Go back to the first page to see them.`}
+              title="No more appeals"
+              description="You've reached the end of the list. Go back to the first page to see it from the start."
               action={
                 <Link
                   href={firstPageHref(guildId, status)}
@@ -172,11 +174,11 @@ export default async function AppealsPage({
             />
           )}
 
-          {data && data.total > 0 ? (
+          {data && (data.appeals.length > 0 || cursor) ? (
             <CardFooter>
-              <Pagination
-                page={data.page}
-                pageSize={data.pageSize}
+              <CursorPagination
+                cursor={cursor}
+                nextCursor={data.nextCursor}
                 total={data.total}
                 itemLabel="appeals"
               />

@@ -21,10 +21,10 @@ import { LoadFailure } from "#/components/ui/load-failure";
 import { ExportLogButton } from "#/components/ui/export-log-button";
 import { FilterBar } from "#/components/ui/filter-bar";
 import { PageHeader } from "#/components/ui/page-header";
-import { Pagination } from "#/components/ui/pagination";
+import { CursorPagination } from "#/components/ui/pagination";
 import { buildModuleLabelIndex } from "#/lib/config-labels";
 import type { ConfigHistoryEntryView, ConfigHistoryListData } from "@lumi/contracts/views";
-import { countBy, extractMemberNames, filterHref, pageNumber, single } from "#/lib/log-format";
+import { countBy, extractMemberNames, filterHref, single } from "#/lib/log-format";
 import { isSnowflake } from "#/lib/moderation-cases";
 
 const PageSize = 25;
@@ -45,7 +45,7 @@ export default async function HistoryPage({
   const moduleName = single(query["module"]);
   const key = single(query["key"]);
   const actorId = single(query["actor"]);
-  const page = pageNumber(single(query["page"]));
+  const cursor = single(query["cursor"]);
 
   const badActorFilter = Boolean(actorId) && !isSnowflake(actorId);
 
@@ -53,8 +53,8 @@ export default async function HistoryPage({
     guildId,
     actorId: session.userId,
     data: {
-      page,
       pageSize: PageSize,
+      ...(cursor ? { cursor } : {}),
       ...(moduleName ? { moduleName } : {}),
       ...(key ? { key } : {}),
       ...(actorId && !badActorFilter ? { actorId } : {}),
@@ -93,10 +93,12 @@ export default async function HistoryPage({
             actions={
               data ? (
                 <>
-                  <Badge variant="neutral" className="tabular">
-                    {data.total} changes
-                  </Badge>
-                  {data.total > 0 ? (
+                  {data.total !== undefined ? (
+                    <Badge variant="neutral" className="tabular">
+                      {data.total} changes
+                    </Badge>
+                  ) : null}
+                  {data.entries.length > 0 ? (
                     <ExportLogButton<ConfigHistoryEntryView>
                       label="Download"
                       filename={`lumi-settings-history-${guildId}-${Date.now()}.json`}
@@ -181,12 +183,12 @@ export default async function HistoryPage({
                 memberNames={memberNames}
               />
             </>
-          ) : data && data.total > 0 ? (
+          ) : data && cursor ? (
             <EmptyState
               compact
               icon={SearchX}
-              title="This page is past the end of the log"
-              description={`The filter matches ${data.total} ${data.total === 1 ? "change" : "changes"}. Go back to the first page to read them.`}
+              title="No more changes"
+              description="You've reached the end of the log. Go back to the first page to read it from the start."
               action={
                 <Link
                   href={filterHref(`/guild/${guildId}/config/history`, {
@@ -231,11 +233,11 @@ export default async function HistoryPage({
             />
           )}
 
-          {data && data.total > 0 ? (
+          {data && (data.entries.length > 0 || cursor) ? (
             <CardFooter>
-              <Pagination
-                page={data.page}
-                pageSize={data.pageSize}
+              <CursorPagination
+                cursor={cursor}
+                nextCursor={data.nextCursor}
                 total={data.total}
                 itemLabel="changes"
               />

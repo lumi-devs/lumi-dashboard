@@ -1,264 +1,53 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "bun:test";
-import type { RpcResponse } from "@lumi/contracts/rpc";
-import { rpcRouter } from "@lumi/contracts/rpc";
+import { describe, it, expect, vi, beforeEach, mock } from "bun:test";
 
-// lib/rpc.ts also imports `#/lib/env` (for the `getRpcClient()` convenience
-// wrapper, which this file doesn't exercise) — real env.ts has dev-safe
-// defaults for every field it reads, so it's fine to import for real rather
-// than mock (mocking it here would leak into every other test file too,
-// since bun:test's module mocks are process-wide, not per-file).
-const { RpcClient, isGuildMissing, isContractMismatch, RpcError } = await import("#/lib/rpc");
+// The actual RPC wire protocol, envelope parsing and retry/breaker behaviour
+// now live in `@lumi/contracts/rpc/client`'s own `RpcClient`, covered by that
+// package's own `rpc/client.test.ts` upstream. This file only exercises
+// `#/lib/rpc`'s own wiring: that `getRpcClient()` builds a singleton
+// `RpcClient` from `env`, and that `rpc()` delegates to it.
+const invoke = vi.fn().mockResolvedValue({ ok: true });
+const ctorArgs: unknown[] = [];
 
-function jsonResponse(body: RpcResponse, ok = true): Response {
-  return {
-    ok,
-    json: () => Promise.resolve(body),
-  } as unknown as Response;
+class FakeRpcClient {
+  public constructor(options: unknown) {
+    ctorArgs.push(options);
+  }
+  public invoke = invoke;
 }
 
-describe("RpcClient", () => {
-  const fetchMock = vi.fn();
-  const originalFetch = globalThis.fetch;
+mock.module("@lumi/contracts/rpc/client", () => ({
+  RpcClient: FakeRpcClient,
+}));
 
+mock.module("server-only", () => ({}));
+
+describe("#/lib/rpc wiring", () => {
   beforeEach(() => {
-    fetchMock.mockReset();
-    globalThis.fetch = fetchMock as unknown as typeof fetch;
+    invoke.mockClear();
+    ctorArgs.length = 0;
+    delete (globalThis as { rpcClient?: unknown }).rpcClient;
   });
 
-  afterEach(() => {
-    globalThis.fetch = originalFetch;
+  it("getRpcClient() builds a singleton RpcClient from env", async () => {
+    const { getRpcClient } = await import("#/lib/rpc");
+    const first = getRpcClient();
+    const second = getRpcClient();
+
+    expect(first).toBe(second);
+    expect(ctorArgs).toHaveLength(1);
+    expect(ctorArgs[0]).toMatchObject({
+      baseUrl: expect.any(String),
+      retry: { attempts: 2, baseDelayMs: 150 },
+    });
   });
 
-  it("posts the request to <baseUrl>/rpc with action/guildId/actorId/data in the body", async () => {
-    fetchMock.mockResolvedValue(
-      jsonResponse({ id: "unused", ok: true, data: { success: true } }),
-    );
+  it("rpc() delegates to the singleton client's invoke()", async () => {
+    const { rpc } = await import("#/lib/rpc");
+    await rpc("guild.shell.get", { guildId: "101", actorId: "1" });
 
-    const client = new RpcClient("http://worker:8091");
-    await client.invoke("guild.module.toggle", {
+    expect(invoke).toHaveBeenCalledWith("guild.shell.get", {
       guildId: "101",
       actorId: "1",
-      data: { moduleName: "afk", enabled: false },
-    });
-
-    expect(fetchMock).toHaveBeenCalledWith(
-      "http://worker:8091/rpc",
-      expect.objectContaining({ method: "POST" }),
-    );
-    const [, init] = fetchMock.mock.calls[0]!;
-    const sent = JSON.parse(init.body as string);
-    expect(sent).toMatchObject({
-      action: "guild.module.toggle",
-      guildId: "101",
-      actorId: "1",
-      data: { moduleName: "afk", enabled: false },
-    });
-  });
-
-  it("sends the internal token as a bearer header when one is configured", async () => {
-    fetchMock.mockResolvedValue(
-      jsonResponse({ id: "unused", ok: true, data: {} }),
-    );
-
-    const client = new RpcClient("http://worker:8091", "s3cret");
-    await client.invoke("guild.shell.get", { guildId: "101", actorId: "1" });
-
-    const [, init] = fetchMock.mock.calls[0]!;
-    expect(init.headers).toMatchObject({ authorization: "Bearer s3cret" });
-  });
-
-  it("omits the bearer header when no token is configured", async () => {
-    fetchMock.mockResolvedValue(
-      jsonResponse({ id: "unused", ok: true, data: {} }),
-    );
-
-    const client = new RpcClient("http://worker:8091");
-    await client.invoke("guild.shell.get", { guildId: "101", actorId: "1" });
-
-    const [, init] = fetchMock.mock.calls[0]!;
-    expect(init.headers).not.toHaveProperty("authorization");
-  });
-
-  it("maps an aborted fetch to a TIMEOUT RpcError", async () => {
-    fetchMock.mockImplementation(() => {
-      const err = new Error("aborted");
-      err.name = "AbortError";
-      return Promise.reject(err);
-    });
-
-    const client = new RpcClient("http://worker:8091");
-    await expect(
-      client.invoke("guild.shell.get", { guildId: "101", actorId: "1" }),
-    ).rejects.toThrow("RPC timed out: guild.shell.get");
-  });
-
-  it("rejects immediately if fetch itself fails (worker unreachable)", async () => {
-    fetchMock.mockRejectedValue(new Error("connect ECONNREFUSED"));
-
-    const client = new RpcClient("http://worker:8091");
-    await expect(
-      client.invoke("guild.shell.get", { guildId: "101", actorId: "1" }),
-    ).rejects.toThrow("connect ECONNREFUSED");
-  });
-
-  it("throws when the response body isn't valid JSON, logging instead", async () => {
-    const log = vi.fn();
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: () => Promise.reject(new Error("Unexpected token")),
-    } as unknown as Response);
-
-    const client = new RpcClient("http://worker:8091", "", log);
-    await expect(
-      client.invoke("guild.shell.get", { guildId: "101", actorId: "1" }),
-    ).rejects.toThrow("malformed response");
-    expect(log).toHaveBeenCalledWith(
-      expect.stringContaining("Discarding undecodable RPC response"),
-    );
-  });
-
-  describe("healthy()", () => {
-    it("reflects the /healthz response status", async () => {
-      fetchMock.mockResolvedValueOnce({ ok: true } as Response);
-      const client = new RpcClient("http://worker:8091");
-      await expect(client.healthy()).resolves.toBe(true);
-      expect(fetchMock).toHaveBeenCalledWith(
-        "http://worker:8091/healthz",
-        expect.objectContaining({ signal: expect.any(AbortSignal) }),
-      );
-    });
-
-    it("returns false when the worker is unreachable", async () => {
-      fetchMock.mockRejectedValueOnce(new Error("connect ECONNREFUSED"));
-      const client = new RpcClient("http://worker:8091");
-      await expect(client.healthy()).resolves.toBe(false);
-    });
-  });
-
-  describe("RpcClient.invoke", () => {
-    it("posts action/guildId/actorId/data", async () => {
-      fetchMock.mockResolvedValue(
-        jsonResponse({ id: "x", ok: true, data: { module: null } }),
-      );
-
-      const client = new RpcClient("http://worker:8091");
-      await expect(
-        client.invoke("guild.module.get", {
-          guildId: "101",
-          actorId: "1",
-          data: { module: "afk" },
-        }),
-      ).resolves.toMatchObject({ module: null });
-
-      const [, init] = fetchMock.mock.calls[0]!;
-      const sent = JSON.parse(init.body as string);
-      expect(sent).toMatchObject({
-        action: "guild.module.get",
-        guildId: "101",
-        actorId: "1",
-        data: { module: "afk" },
-      });
-    });
-
-    it("uses the router timeout for the action", async () => {
-      fetchMock.mockResolvedValue(
-        jsonResponse({ id: "x", ok: true, data: {} }),
-      );
-      const spy = vi.spyOn(globalThis, "setTimeout");
-
-      const client = new RpcClient("http://worker:8091");
-      await client.invoke("guild.shell.get", { guildId: "101", actorId: "1" });
-
-      expect(spy).toHaveBeenCalledWith(
-        expect.any(Function),
-        rpcRouter["guild.shell.get"].timeoutMs,
-      );
-      spy.mockRestore();
-    });
-
-    it("throws RpcError carrying the envelope code", async () => {
-      fetchMock.mockResolvedValue(
-        jsonResponse({
-          id: "x",
-          ok: false,
-          error: "Guild not found in bot cache",
-          code: "GUILD_NOT_FOUND",
-        }),
-      );
-
-      const client = new RpcClient("http://worker:8091");
-      let caught: unknown;
-      try {
-        await client.invoke("guild.shell.get", { guildId: "101", actorId: "1" });
-      } catch (err) {
-        caught = err;
-      }
-      expect(caught).toBeInstanceOf(RpcError);
-      expect((caught as InstanceType<typeof RpcError>).code).toBe("GUILD_NOT_FOUND");
-      expect((caught as Error).message).toBe("Guild not found in bot cache");
-      expect(isGuildMissing(caught)).toBe(true);
-    });
-
-    it("passes other codes through", async () => {
-      fetchMock.mockResolvedValue(
-        jsonResponse({
-          id: "x",
-          ok: false,
-          error: "nope",
-          code: "FORBIDDEN",
-        }),
-      );
-
-      const client = new RpcClient("http://worker:8091");
-      let caught: unknown;
-      try {
-        await client.invoke("guild.shell.get", { guildId: "101", actorId: "1" });
-      } catch (err) {
-        caught = err;
-      }
-      expect((caught as InstanceType<typeof RpcError>).code).toBe("FORBIDDEN");
-      expect(isGuildMissing(caught)).toBe(false);
-    });
-
-    it("surfaces a contract version mismatch with the server's clear message", async () => {
-      fetchMock.mockResolvedValue(
-        jsonResponse({
-          id: "x",
-          ok: false,
-          error:
-            "Contract version mismatch: caller is on @lumi/contracts@0.4.0, this server is on @lumi/contracts@0.5.0. Update one side to match.",
-          code: "CONTRACT_MISMATCH",
-        }),
-      );
-
-      const client = new RpcClient("http://worker:8091");
-      let caught: unknown;
-      try {
-        await client.invoke("guild.shell.get", { guildId: "101", actorId: "1" });
-      } catch (err) {
-        caught = err;
-      }
-      expect(isContractMismatch(caught)).toBe(true);
-      expect((caught as Error).message).toContain("Contract version mismatch");
-    });
-
-    it("rejects ok:true without data", async () => {
-      fetchMock.mockResolvedValue(jsonResponse({ id: "x", ok: true }));
-
-      const client = new RpcClient("http://worker:8091");
-      await expect(
-        client.invoke("guild.shell.get", { guildId: "101", actorId: "1" }),
-      ).rejects.toThrow("response missing expected data");
-    });
-
-    it("rejects a failure envelope without a code as malformed", async () => {
-      const malformed = { id: "x", ok: false, error: "nope" } as unknown as RpcResponse;
-      fetchMock.mockResolvedValue(jsonResponse(malformed));
-
-      const client = new RpcClient("http://worker:8091");
-      await expect(
-        client.invoke("guild.shell.get", { guildId: "101", actorId: "1" }),
-      ).rejects.toThrow("malformed response");
     });
   });
 });

@@ -54,21 +54,21 @@ export default async function GuildOverviewPage({
       rpc("guild.audit.list", {
         guildId,
         actorId: session.userId,
-        data: { page: 1, pageSize: FeedRows },
+        data: { pageSize: FeedRows },
       }),
     ),
     safe(
       rpc("guild.appeals.list", {
         guildId,
         actorId: session.userId,
-        data: { status: "pending", page: 1, pageSize: 1 },
+        data: { status: "pending", pageSize: 1 },
       }),
     ),
     safe(
       rpc("guild.history.list", {
         guildId,
         actorId: session.userId,
-        data: { page: 1, pageSize: FeedRows },
+        data: { pageSize: FeedRows },
       }),
     ),
     // Fleet telemetry is an owner-only read; a guild manager simply doesn't get
