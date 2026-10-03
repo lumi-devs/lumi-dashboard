@@ -1,0 +1,76 @@
+# Changelog
+
+## 1.0.0 (2026-10-03)
+
+
+### Features
+
+* **contracts,observability:** make packages publishable to GitHub Packages ([8ef7f7c](https://github.com/lumi-devs/lumi-dashboard/commit/8ef7f7c2518b21d65f7ff9827879f526d165406f))
+* **core,dashboard:** Components V2 message builder for Welcome and Sticky ([48e1528](https://github.com/lumi-devs/lumi-dashboard/commit/48e15282487a82cb4a00b72d46e19025a1b26d2b))
+* **core,dashboard:** dashboard-managed logging config page and claim RPC ([dde1c94](https://github.com/lumi-devs/lumi-dashboard/commit/dde1c942123605195e0384be41c9091181615cc2))
+* **core,dashboard:** live verification panel with real Discord posting ([315b78b](https://github.com/lumi-devs/lumi-dashboard/commit/315b78b7a03c29d3cbbee27530adfce8a718bc29))
+* **core,dashboard:** move config-only commands to dashboard-exclusive ([debf5dc](https://github.com/lumi-devs/lumi-dashboard/commit/debf5dcdecd1cb610589b8724ba21f32a5af68d7))
+* dashboard IA redesign, concurrency hardening, test coverage, constant rename ([878e9ef](https://github.com/lumi-devs/lumi-dashboard/commit/878e9efc7955d66204222bc3ffb0aaf270f30880))
+* **dashboard:** add Advanced Layout block editor to welcome/goodbye, tempvc panel, and reaction roles ([28217ae](https://github.com/lumi-devs/lumi-dashboard/commit/28217ae2fa977ac8f1dcb8700afe0369369139e0))
+* **dashboard:** auto-detect bot owner via worker RPC instead of BOT_OWNERS env var ([098bf1f](https://github.com/lumi-devs/lumi-dashboard/commit/098bf1f425de6817c57ea39234fff4b3201f0dd3))
+* **dashboard:** guided setup wizard for security baseline ([4d63732](https://github.com/lumi-devs/lumi-dashboard/commit/4d637321e904c07b4b83298ea72607cf061c6ddf))
+* **dashboard:** IA redesign phase 2 - nested guild route paths with legacy redirects ([8421d48](https://github.com/lumi-devs/lumi-dashboard/commit/8421d48d71555941dae7507395f97a6674e40694))
+* **dashboard:** modernize UI — engineering-blueprint aesthetic, lucide icons, light/dark themes ([0e2d485](https://github.com/lumi-devs/lumi-dashboard/commit/0e2d485e4b40a75aba93f393d5d0e49a77e725eb))
+* **dashboard:** rewrite apps/dashboard on Next.js per dashboard.md spec ([397baba](https://github.com/lumi-devs/lumi-dashboard/commit/397baba5c4d141d42ec10e95cb0e848221e94356))
+* **dashboard:** shadcn/ui migration + nested nav + Health Check, Mod Notes, Appeals ([9389cf7](https://github.com/lumi-devs/lumi-dashboard/commit/9389cf75e6f80c2da5cb6e3621f9d2ce860b3866))
+* **dashboard:** stream guild SSE events and refresh on change ([ccca606](https://github.com/lumi-devs/lumi-dashboard/commit/ccca6063309dd5435e172434d3d8fa9009ebb577))
+* **dashboard:** surface coded RPC failures and revalidate layout-wide on save ([79bbcc8](https://github.com/lumi-devs/lumi-dashboard/commit/79bbcc8cd2b01f798583243a21aa2c345d9bbdae))
+* **dashboard:** tabbed security sections and schema-driven config group cards ([e4f92b9](https://github.com/lumi-devs/lumi-dashboard/commit/e4f92b989d937808bc4bf73ce9962bd2fd746ab6))
+* **dashboard:** Wave 7 Phase 1 - Navigation restructuring (4→6 categories) ([c5be19e](https://github.com/lumi-devs/lumi-dashboard/commit/c5be19e14a9b56a130aa9a8ad1d5d5e5146b87fd))
+* **dashboard:** web admin panel (apps/dashboard) over the RPC bridge ([b054c40](https://github.com/lumi-devs/lumi-dashboard/commit/b054c404bb1eb48166aa8e4c4025baa346cb7475))
+* **downloader:** auto-derive addon repo name from git URL ([8bf0d1a](https://github.com/lumi-devs/lumi-dashboard/commit/8bf0d1a16b361db63843dae1b6b5261d4a59d01a))
+* economy, welcome, reaction-roles modules; mod tools overhaul; agents/ docs ([0914bba](https://github.com/lumi-devs/lumi-dashboard/commit/0914bba62bcd26be9719cfec3c008a5536bf0087))
+* implement modular dashboard RPC handlers and support utilities for moderation, auditing, and guild management ([0331882](https://github.com/lumi-devs/lumi-dashboard/commit/0331882997d0b86b651f75957ba8f14f80759cc3))
+* implement whois and serverinfo modules, expand database schema, and reorganize core utilities ([f2c291d](https://github.com/lumi-devs/lumi-dashboard/commit/f2c291de61d675961f67afdc87bfbf318e51fafa))
+* migrate to contracts/observability 0.6.0-next.0 ([11355cf](https://github.com/lumi-devs/lumi-dashboard/commit/11355cfa39da0fdd0599d99a441d245e11b249e3))
+* migrate to contracts/observability 0.6.0-next.0 ([5a72e1d](https://github.com/lumi-devs/lumi-dashboard/commit/5a72e1d68c2c07334846c3d30858d90e7283aac1))
+* **modules:** render short tagline and endUserDataStatement across dashboard and discord panels ([b3036b3](https://github.com/lumi-devs/lumi-dashboard/commit/b3036b34f6026e54b4d17337d71aa307537c9cdd))
+* overhaul UI system, setup wizards, RPC batch endpoints ([fbb3d81](https://github.com/lumi-devs/lumi-dashboard/commit/fbb3d8189f111f7eaae61431ff67c418af1ff8cb))
+* reinvent permit system, GDPR export, guild-picker, dashboard dropdowns, command autocomplete ([004a106](https://github.com/lumi-devs/lumi-dashboard/commit/004a106300508ff35c7400afcaeaa57c611efd80))
+* **repo:** comprehensive repository hygiene, release automation, docs fact-checking, and CI pipelines ([4a69162](https://github.com/lumi-devs/lumi-dashboard/commit/4a69162488a71a536ab0b169fe3a1708ba06a212))
+* **security:** add press-to-enter and web verification modes ([1d52882](https://github.com/lumi-devs/lumi-dashboard/commit/1d5288239328853ae1b57539ea94e5fa47548248))
+* **tempvc:** add module config schema, guild-configurable cooldown/limit, more name placeholders ([07e3e71](https://github.com/lumi-devs/lumi-dashboard/commit/07e3e717d6a780f57d31ca700d8fb286f0ce1ba6))
+* **theme,docs:** adopt Midnight Sapphire design system, Next.js 16 docs, and GDPR retention ([ddaef2c](https://github.com/lumi-devs/lumi-dashboard/commit/ddaef2c5c3a2446cf692d419ec1d28201c957c1a))
+
+
+### Bug Fixes
+
+* address 12 confirmed findings from architecture review ([67fbc76](https://github.com/lumi-devs/lumi-dashboard/commit/67fbc761256a95d46c6fb61a6cb438066a0225ca))
+* **bug-hunter:** A-BUG-1 — stop clobbering isBotOwner on OAuth guilds-fetch failure ([6f815ea](https://github.com/lumi-devs/lumi-dashboard/commit/6f815eae36daa701247f3f14da545e014024cd2d))
+* **ci:** pin trivy-action and cosign-installer to real tags ([1b9cea5](https://github.com/lumi-devs/lumi-dashboard/commit/1b9cea5faabd132f7851ea3fbd2a0fafab3f3787))
+* **ci:** thread --coverage into both vitest invocations in test script ([672f28d](https://github.com/lumi-devs/lumi-dashboard/commit/672f28d7cf65e5a7fef1258cb0b94b0a285ee87c))
+* close nine confirmed defects across handlers, retention, RPC and schema ([a3da0ae](https://github.com/lumi-devs/lumi-dashboard/commit/a3da0aed5b05486774ca3a18bb8d605ba945e56b))
+* cluster-unsafe telemetry, RPC hardening, and env debloat ([806563f](https://github.com/lumi-devs/lumi-dashboard/commit/806563fbb10996d84e5ae8b45338a816a0968760))
+* coded addon failure envelopes; typecheck depends on upstream packages ([ecbf137](https://github.com/lumi-devs/lumi-dashboard/commit/ecbf137fdf031547bd73cdcfb2554906edeac276))
+* **core:** commit the backend files this PR's dashboard RPC surface depends on ([9ba381c](https://github.com/lumi-devs/lumi-dashboard/commit/9ba381c74930be4f5a40f7df1f491eaaef573177))
+* **core:** quarantine case actions, cache single-flight, pipelined entity cache ([2c962c2](https://github.com/lumi-devs/lumi-dashboard/commit/2c962c21db611d6b70a4449505d60ec6cb497db2))
+* **dashboard:** back rate limiter with rate-limiter-flexible ([eab7356](https://github.com/lumi-devs/lumi-dashboard/commit/eab7356cc9fe712d4c413939dc4e060ed02682a7))
+* **dashboard:** break CodeQL taint edge on message-preview href sinks ([e9135e4](https://github.com/lumi-devs/lumi-dashboard/commit/e9135e4ae5cf40b1d6fb170fdac451febd605405))
+* **dashboard:** darkreader hydration guard, login pending state, nav tweak ([bfb2149](https://github.com/lumi-devs/lumi-dashboard/commit/bfb2149eed2906ffee81e957883233a6d6d61ee7))
+* **dashboard:** keep open guild-settings tabs in sync across saves ([fab00f4](https://github.com/lumi-devs/lumi-dashboard/commit/fab00f41525eb7912010aa4f337412352b5b9780))
+* **dashboard:** let the production build run without a session secret ([e41de6c](https://github.com/lumi-devs/lumi-dashboard/commit/e41de6c3d0f113e4756b0762c4dbb81f62bd6440))
+* **dashboard:** polish dropdown menu styling, tempvc name-pattern preview ([12f4fbd](https://github.com/lumi-devs/lumi-dashboard/commit/12f4fbdd44bca2fa3e47e68c611bad6c210ff952))
+* **dashboard:** preview Components V2 containers, not embeds; drop the fake case card ([8cc1a31](https://github.com/lumi-devs/lumi-dashboard/commit/8cc1a31b7c60138b8af0269663d39a277cdc245d))
+* **dashboard:** reject unsafe URL schemes in Discord message preview links ([65e2741](https://github.com/lumi-devs/lumi-dashboard/commit/65e2741f7642994c42da138fb8595b9e08fe1535))
+* **dashboard:** resolve NextAuth build page-data collection error and add changeset ([68769d7](https://github.com/lumi-devs/lumi-dashboard/commit/68769d728ad740675508fd24790076b81c53ba67))
+* **dashboard:** return from a bot invite and refresh the stale server list ([b999ed5](https://github.com/lumi-devs/lumi-dashboard/commit/b999ed5d37b3945f8d566eb1c805156d57093bc1))
+* **dashboard:** stop GeneralSettingsForm from reverting concurrent edits ([729c6e9](https://github.com/lumi-devs/lumi-dashboard/commit/729c6e9c07a0a3feffa2f0aee18c129ada6e0130))
+* **docker:** copy patches/ into the deps build stage ([9f02d8d](https://github.com/lumi-devs/lumi-dashboard/commit/9f02d8df02b6288758ab37b8b5e7d01ab8aa8f3b))
+* **docker:** upgrade base alpine packages to pick up openssl fixes ([f25211b](https://github.com/lumi-devs/lumi-dashboard/commit/f25211bdab963df11eb5133fc84cc26dc46a9d5c))
+* security audit — owner-permit RCE, mod hierarchy, ReDoS, config validation, token exposure ([c888416](https://github.com/lumi-devs/lumi-dashboard/commit/c888416913a701b1935c0865832d6efb5d46efd7))
+* **security:** path traversal in docs slug resolution, direct Redis access from dashboard ([#135](https://github.com/lumi-devs/lumi-dashboard/issues/135)) ([212da20](https://github.com/lumi-devs/lumi-dashboard/commit/212da205c0f829679787180aa1c4edefcea74c41))
+* **security:** replace HMAC cookie signing with random opaque session tokens ([e59b608](https://github.com/lumi-devs/lumi-dashboard/commit/e59b608ff91f6dce3a2e24921ad86b517dc66aa7))
+* **test:** switch coverage provider from v8 to istanbul ([a30f749](https://github.com/lumi-devs/lumi-dashboard/commit/a30f7492e960da5e3fb1ae778d3c21130213db33))
+
+
+### Performance Improvements
+
+* **core,dashboard:** batch appeals moderation lookups, memoize DataTable columns ([#134](https://github.com/lumi-devs/lumi-dashboard/issues/134)) ([026defb](https://github.com/lumi-devs/lumi-dashboard/commit/026defbbed7a2c2b1e7f41ba929957d5ef3744e9))
+* **core:** execute full codebase optimization and debloat plan ([c262055](https://github.com/lumi-devs/lumi-dashboard/commit/c2620554acddf281a70d6b428c3291c9cdc66872))
+* **core:** gate and cache the mod/tempvc voice hot paths, reorder sticky's cooldown check, i18n the remaining hardcoded strings ([1c17022](https://github.com/lumi-devs/lumi-dashboard/commit/1c17022caf361f985401fccce0c299d6cac13dcb))
+* **dashboard:** parallel guild reads, one action guard, drop dead playgrounds and animejs ([465a010](https://github.com/lumi-devs/lumi-dashboard/commit/465a0105b671eeb24fe09310d796875eac1cab2d))
