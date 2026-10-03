@@ -13,7 +13,7 @@ function isDashboardEvent(value: unknown): value is DashboardEvent {
   const v = value as Record<string, unknown>;
   return (
     typeof v.type === "string" &&
-    DashboardEventTypes.has(v.type as DashboardEvent["type"]) &&
+    DashboardEventTypes.has(v.type) &&
     typeof v.guildId === "string"
   );
 }

@@ -60,11 +60,7 @@ application.
 
 ## Local development
 
-Install needs a GitHub personal access token with `read:packages` scope to pull
-`@lumi-devs/contracts`/`@lumi-devs/observability` from GitHub Packages:
-
 ```bash
-export NODE_AUTH_TOKEN=<a token with read:packages>
 bun install
 bun run dev
 ```
@@ -79,13 +75,8 @@ bun run build
 ## Docker
 
 ```bash
-docker buildx build --target dashboard \
-  --secret id=node_auth_token,env=NODE_AUTH_TOKEN \
-  -t lumi-dashboard .
+docker buildx build --target dashboard -t lumi-dashboard .
 ```
-
-The `NODE_AUTH_TOKEN` is only used inside the `deps` build stage (to install the private
-packages) via a BuildKit secret mount — it is never written into an image layer.
 
 ## Repository secrets
 

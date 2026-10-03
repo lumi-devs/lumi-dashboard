@@ -1,9 +1,4 @@
 version: 2
-registries:
-  lumi-packages:
-    type: npm-registry
-    url: https://npm.pkg.github.com
-    token: "${{secrets.DEPENDABOT_TOKEN}}"
 updates:
   - package-ecosystem: npm
     directory: /
@@ -12,8 +7,6 @@ updates:
     target-branch: main
     labels:
       - "area:deps"
-    registries:
-      - lumi-packages
     groups:
       npm-minor-patch:
         update-types:

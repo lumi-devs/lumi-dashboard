@@ -55,9 +55,7 @@ and check Lumi's own changelog for breaking RPC/view-shape changes before bumpin
 
 ## Running things
 
-- `bun install` — needs `NODE_AUTH_TOKEN` (a GitHub PAT with `read:packages`, or
-  `secrets.GITHUB_TOKEN` in Actions) in the environment; `.npmrc` reads it to authenticate against
-  `npm.pkg.github.com` for the `@lumi-devs` scope.
+- `bun install`
 - `bun run typecheck` — `tsc --noEmit -p tsconfig.json`.
 - `bun run lint` — `eslint src` (plain ESLint, not `next lint`, which Next 16 removed).
 - `bun run test` — `bun test --parallel`.
