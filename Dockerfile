@@ -24,7 +24,7 @@ RUN bun run build
 FROM base AS dashboard
 LABEL org.opencontainers.image.source=https://github.com/lumi-devs/lumi-dashboard
 LABEL org.opencontainers.image.description="Web admin dashboard for Lumi Discord bot"
-LABEL org.opencontainers.image.licenses=GPL-3.0-only
+LABEL org.opencontainers.image.licenses=AGPL-3.0-only
 RUN apk add --no-cache nodejs
 ENV NODE_ENV=production
 COPY --from=build --chown=bun:bun /app/.next/standalone ./
