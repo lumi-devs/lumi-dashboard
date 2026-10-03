@@ -2,7 +2,7 @@
 
 import type { AppealStatus } from "@lumi/contracts/rpc";
 import { rpc } from "#/lib/rpc";
-import { fetchAllPages } from "#/lib/export-pages";
+import { fetchAllByCursor, fetchAllPages } from "#/lib/export-pages";
 import type { AppealView, AuditEntryView, BlocklistEntryView, ConfigHistoryEntryView, ModerationCaseView, ModNoteView } from "@lumi/contracts/views";
 import type { ActionResult } from "./guild-actions";
 import { guildAction } from "./_guard";
@@ -18,12 +18,12 @@ export async function exportGuildCases(
   return guildAction(
     guildId,
     async (session) => {
-      const items = await fetchAllPages<ModerationCaseView>((page, pageSize) =>
+      const items = await fetchAllByCursor<ModerationCaseView>((cursor, pageSize) =>
         rpc("guild.cases.list", {
           guildId,
           actorId: session.userId,
-          data: { ...filter, page, pageSize },
-        }).then((data) => ({ items: data.cases, total: data.total })),
+          data: { ...filter, ...(cursor ? { cursor } : {}), pageSize },
+        }).then((data) => ({ items: data.cases, nextCursor: data.nextCursor })),
       );
       return { ok: true, items };
     },
@@ -38,12 +38,12 @@ export async function exportGuildAuditLog(
   return guildAction(
     guildId,
     async (session) => {
-      const items = await fetchAllPages<AuditEntryView>((page, pageSize) =>
+      const items = await fetchAllByCursor<AuditEntryView>((cursor, pageSize) =>
         rpc("guild.audit.list", {
           guildId,
           actorId: session.userId,
-          data: { ...filter, page, pageSize },
-        }).then((data) => ({ items: data.entries, total: data.total })),
+          data: { ...filter, ...(cursor ? { cursor } : {}), pageSize },
+        }).then((data) => ({ items: data.entries, nextCursor: data.nextCursor })),
       );
       return { ok: true, items };
     },
@@ -58,12 +58,12 @@ export async function exportGuildConfigHistory(
   return guildAction(
     guildId,
     async (session) => {
-      const items = await fetchAllPages<ConfigHistoryEntryView>((page, pageSize) =>
+      const items = await fetchAllByCursor<ConfigHistoryEntryView>((cursor, pageSize) =>
         rpc("guild.history.list", {
           guildId,
           actorId: session.userId,
-          data: { ...filter, page, pageSize },
-        }).then((data) => ({ items: data.entries, total: data.total })),
+          data: { ...filter, ...(cursor ? { cursor } : {}), pageSize },
+        }).then((data) => ({ items: data.entries, nextCursor: data.nextCursor })),
       );
       return { ok: true, items };
     },
@@ -97,12 +97,12 @@ export async function exportGuildAppeals(
   return guildAction(
     guildId,
     async (session) => {
-      const items = await fetchAllPages<AppealView>((page, pageSize) =>
+      const items = await fetchAllByCursor<AppealView>((cursor, pageSize) =>
         rpc("guild.appeals.list", {
           guildId,
           actorId: session.userId,
-          data: { ...filter, page, pageSize },
-        }).then((data) => ({ items: data.appeals, total: data.total })),
+          data: { ...filter, ...(cursor ? { cursor } : {}), pageSize },
+        }).then((data) => ({ items: data.appeals, nextCursor: data.nextCursor })),
       );
       return { ok: true, items };
     },

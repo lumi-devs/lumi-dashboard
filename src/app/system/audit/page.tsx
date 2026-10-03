@@ -19,9 +19,9 @@ import { EmptyState } from "#/components/ui/empty-state";
 import { ExportLogButton } from "#/components/ui/export-log-button";
 import { FilterBar } from "#/components/ui/filter-bar";
 import { PageHeader } from "#/components/ui/page-header";
-import { Pagination } from "#/components/ui/pagination";
+import { CursorPagination } from "#/components/ui/pagination";
 import type { AuditEntryView, AuditListData } from "@lumi/contracts/views";
-import { AuditPlatformOptions, countBy, filterHref, formatShortDay, pageNumber, single } from "#/lib/log-format";
+import { AuditPlatformOptions, countBy, filterHref, formatShortDay, single } from "#/lib/log-format";
 import { isSnowflake } from "#/lib/moderation-cases";
 
 const PageSize = 30;
@@ -40,7 +40,7 @@ export default async function SystemAuditPage({
   const userId = single(query["user"]);
   const guildId = single(query["guild"]);
   const platform = single(query["platform"]);
-  const page = pageNumber(single(query["page"]));
+  const cursor = single(query["cursor"]);
 
   const rejected = [
     userId && !isSnowflake(userId) ? "Acting user ID" : null,
@@ -56,8 +56,8 @@ export default async function SystemAuditPage({
     data = await rpc("system.audit.list", {
       actorId: session.userId,
       data: {
-        page,
         pageSize: PageSize,
+        ...(cursor ? { cursor } : {}),
         ...(action ? { action } : {}),
         ...(userId && isSnowflake(userId) ? { userId } : {}),
         ...(guildId && isSnowflake(guildId) ? { guildId } : {}),
@@ -104,10 +104,12 @@ export default async function SystemAuditPage({
             actions={
               data ? (
                 <>
-                  <Badge variant="neutral" className="tabular">
-                    {data.total} recorded
-                  </Badge>
-                  {data.total > 0 ? (
+                  {data.total !== undefined ? (
+                    <Badge variant="neutral" className="tabular">
+                      {data.total} recorded
+                    </Badge>
+                  ) : null}
+                  {data.entries.length > 0 ? (
                     <ExportLogButton<AuditEntryView>
                       label="Download"
                       filename={`lumi-system-audit-log-${Date.now()}.json`}
@@ -206,12 +208,12 @@ export default async function SystemAuditPage({
                 }
               />
             </>
-          ) : data && data.total > 0 ? (
+          ) : data && cursor ? (
             <EmptyState
               compact
               icon={SearchX}
-              title="This page is past the end of the ledger"
-              description={`The filter matches ${data.total} ${data.total === 1 ? "entry" : "entries"}. Go back to the first page to read them.`}
+              title="No more entries"
+              description="You've reached the end of the ledger. Go back to the first page to read it from the start."
               action={
                 <Link
                   href={filterHref("/system/audit", {
@@ -249,11 +251,11 @@ export default async function SystemAuditPage({
             />
           )}
 
-          {data && data.total > 0 ? (
+          {data && (data.entries.length > 0 || cursor) ? (
             <CardFooter>
-              <Pagination
-                page={data.page}
-                pageSize={data.pageSize}
+              <CursorPagination
+                cursor={cursor}
+                nextCursor={data.nextCursor}
                 total={data.total}
                 itemLabel="entries"
               />

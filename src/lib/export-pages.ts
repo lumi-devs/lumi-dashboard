@@ -21,3 +21,25 @@ export async function fetchAllPages<T>(
   }
   return results;
 }
+
+/**
+ * Same walk as `fetchAllPages`, for the keyset-paginated list endpoints
+ * (audit, cases, appeals, config history) - there is no page number, only a
+ * `nextCursor` threaded from one request into the next.
+ */
+export async function fetchAllByCursor<T>(
+  fetchPage: (
+    cursor: string | undefined,
+    pageSize: number,
+  ) => Promise<{ items: T[]; nextCursor: string | null }>,
+): Promise<T[]> {
+  const results: T[] = [];
+  let cursor: string | undefined;
+  for (let i = 0; i < ExportMaxPages; i++) {
+    const { items, nextCursor } = await fetchPage(cursor, ExportPageSize);
+    results.push(...items);
+    if (items.length === 0 || nextCursor === null) break;
+    cursor = nextCursor;
+  }
+  return results;
+}

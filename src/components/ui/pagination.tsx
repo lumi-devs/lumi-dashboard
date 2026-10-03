@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 import { buttonVariants } from "./button-variants";
 import { cn } from "#/lib/utils";
 
@@ -77,6 +77,84 @@ export function Pagination({
           </PageStep>
         </div>
       ) : null}
+    </nav>
+  );
+}
+
+/**
+ * For the keyset-paginated lists (audit, cases, appeals, config history) —
+ * there is no page count, only "load more" via `nextCursor` and a reset back
+ * to the first, cursor-less request.
+ */
+export function CursorPagination({
+  cursor,
+  nextCursor,
+  total,
+  itemLabel = "results",
+  cursorParam = "cursor",
+  className,
+}: {
+  cursor: string;
+  nextCursor: string | null;
+  total?: number;
+  itemLabel?: string;
+  cursorParam?: string;
+  className?: string;
+}) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  if (!cursor && !nextCursor) return null;
+
+  function hrefFor(target: string | null) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (target) params.set(cursorParam, target);
+    else params.delete(cursorParam);
+    const qs = params.toString();
+    return qs ? `${pathname}?${qs}` : pathname;
+  }
+
+  return (
+    <nav
+      aria-label="Pagination"
+      className={cn(
+        "flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-2",
+        className,
+      )}
+    >
+      <p className="text-[14px] text-fg-muted">
+        {total !== undefined ? (
+          <>
+            <span className="tabular text-fg">{total}</span> {itemLabel} total
+          </>
+        ) : (
+          `More ${itemLabel} available`
+        )}
+      </p>
+      <div className="flex items-center gap-2">
+        {cursor ? (
+          <Link
+            href={hrefFor(null)}
+            aria-label="Back to first page"
+            className={buttonVariants({ variant: "secondary", size: "sm" })}
+            scroll={false}
+          >
+            <RotateCcw aria-hidden />
+            Back to first page
+          </Link>
+        ) : null}
+        {nextCursor ? (
+          <Link
+            href={hrefFor(nextCursor)}
+            aria-label="Next page"
+            className={buttonVariants({ variant: "secondary", size: "sm" })}
+            scroll={false}
+          >
+            Next
+            <ChevronRight aria-hidden />
+          </Link>
+        ) : null}
+      </div>
     </nav>
   );
 }

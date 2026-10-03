@@ -1,7 +1,7 @@
 "use server";
 
 import { rpc } from "#/lib/rpc";
-import { fetchAllPages } from "#/lib/export-pages";
+import { fetchAllByCursor, fetchAllPages } from "#/lib/export-pages";
 import type { AuditEntryView, BlocklistEntryView } from "@lumi/contracts/views";
 import type { ExportResult } from "./guild-export-actions";
 import { ownerAction } from "./_guard";
@@ -11,11 +11,11 @@ export async function exportSystemAuditLog(
 ): Promise<ExportResult<AuditEntryView>> {
   return ownerAction(
     async (session) => {
-      const items = await fetchAllPages<AuditEntryView>((page, pageSize) =>
+      const items = await fetchAllByCursor<AuditEntryView>((cursor, pageSize) =>
         rpc("system.audit.list", {
           actorId: session.userId,
-          data: { ...filter, page, pageSize },
-        }).then((data) => ({ items: data.entries, total: data.total })),
+          data: { ...filter, ...(cursor ? { cursor } : {}), pageSize },
+        }).then((data) => ({ items: data.entries, nextCursor: data.nextCursor })),
       );
       return { ok: true, items };
     },

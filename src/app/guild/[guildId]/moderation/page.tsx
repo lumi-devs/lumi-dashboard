@@ -20,9 +20,9 @@ import { EmptyState } from "#/components/ui/empty-state";
 import { ExportLogButton } from "#/components/ui/export-log-button";
 import { FilterBar } from "#/components/ui/filter-bar";
 import { PageHeader } from "#/components/ui/page-header";
-import { Pagination } from "#/components/ui/pagination";
+import { CursorPagination } from "#/components/ui/pagination";
 import type { CasesListData, ModerationCaseView } from "@lumi/contracts/views";
-import { countBy, extractMemberNames, pageNumber, single } from "#/lib/log-format";
+import { countBy, extractMemberNames, single } from "#/lib/log-format";
 import { isSnowflake } from "#/lib/moderation-cases";
 import { CaseActionOptions } from "#/lib/moderation-cases";
 
@@ -44,7 +44,7 @@ export default async function ModerationPage({
   const action = single(query["action"]);
   const userId = single(query["user"]);
   const moderatorId = single(query["moderator"]);
-  const page = pageNumber(single(query["page"]));
+  const cursor = single(query["cursor"]);
 
   const rejected = [
     userId && !isSnowflake(userId) ? "Target user ID" : null,
@@ -56,8 +56,8 @@ export default async function ModerationPage({
     guildId,
     actorId: session.userId,
     data: {
-      page,
       pageSize: PageSize,
+      ...(cursor ? { cursor } : {}),
       ...(action ? { action } : {}),
       ...(userId && isSnowflake(userId) ? { userId } : {}),
       ...(moderatorId && isSnowflake(moderatorId) ? { moderatorId } : {}),
@@ -95,10 +95,12 @@ export default async function ModerationPage({
             actions={
               data ? (
                 <>
-                  <Badge variant="neutral" className="tabular">
-                    {data.total} total
-                  </Badge>
-                  {data.total > 0 ? (
+                  {data.total !== undefined ? (
+                    <Badge variant="neutral" className="tabular">
+                      {data.total} total
+                    </Badge>
+                  ) : null}
+                  {data.cases.length > 0 ? (
                     <ExportLogButton<ModerationCaseView>
                       label="Download"
                       filename={`lumi-moderation-cases-${guildId}-${Date.now()}.json`}
@@ -184,12 +186,12 @@ export default async function ModerationPage({
                 memberNames={memberNames}
               />
             </>
-          ) : data && data.total > 0 ? (
+          ) : data && cursor ? (
             <EmptyState
               compact
               icon={SearchX}
-              title="This page is past the end of the log"
-              description={`The log holds ${data.total} case${data.total === 1 ? "" : "s"}. Go back to the first page to see them.`}
+              title="No more cases"
+              description="You've reached the end of the log. Go back to the first page to see it from the start."
               action={
                 <Link
                   href={firstPageHref(guildId, action, userId, moderatorId)}
@@ -230,11 +232,11 @@ export default async function ModerationPage({
             />
           )}
 
-          {data && data.total > 0 ? (
+          {data && (data.cases.length > 0 || cursor) ? (
             <CardFooter>
-              <Pagination
-                page={data.page}
-                pageSize={data.pageSize}
+              <CursorPagination
+                cursor={cursor}
+                nextCursor={data.nextCursor}
                 total={data.total}
                 itemLabel="cases"
               />
