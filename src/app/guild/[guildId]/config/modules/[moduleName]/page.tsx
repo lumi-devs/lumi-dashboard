@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { SlidersHorizontal } from "lucide-react";
 import { requireGuild } from "#/lib/auth-guards";
 import { getGuildModule, getGuildEntities } from "#/lib/guild-reads";
-import { ModuleConfigForm } from "#/components/guild/module-config-form";
+import { ModuleConfigForm } from "#/components/config/module-config-form";
 import { PageHeader } from "#/components/ui/page-header";
 
 export default async function GuildModuleConfigPage({

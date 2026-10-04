@@ -1,9 +1,9 @@
 import { requireGuild } from "#/lib/auth-guards";
 import { getGuildShell, getGuildEntities } from "#/lib/guild-reads";
 import { rpc } from "#/lib/rpc";
-import { AfkList } from "#/components/guild/afk-list";
-import { IgnoredChannelsList } from "#/components/guild/ignored-channels-list";
-import { ModuleDataTable } from "#/components/guild/module-data-table";
+import { AfkList } from "#/modules/afk/index";
+import { IgnoredChannelsList } from "#/modules/guild-config/ignored-channels-list";
+import { ModuleDataTable } from "#/components/config/module-data-table";
 import { Badge } from "#/components/ui/badge";
 import {
   Card,

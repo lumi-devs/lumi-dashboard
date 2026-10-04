@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { buildSetupIssues } from "#/components/guild/setup-issues";
+import { buildSetupIssues } from "#/modules/setup/setup-issues";
 
 describe("buildSetupIssues", () => {
   it("reports every gap for a fresh server", () => {

@@ -1,72 +1,95 @@
 # AGENTS.md
 
-Operating spec for any AI coding agent working in this repository.
+Operating specification for AI coding agents working in `lumi-dashboard`.
 
-`lumi-dashboard` is the standalone Next.js (App Router) web admin panel for
-[Lumi](https://github.com/lumi-devs/Lumi), a self-hosted, modular Discord bot. It was split out
-of the Lumi monorepo (`apps/dashboard`) so it can be built and deployed independently. See
-`README.md` for environment variables, local dev, and the contract-version compatibility rule.
+`lumi-dashboard` is the standalone Next.js (App Router) web admin dashboard for
+[Lumi](https://github.com/lumi-devs/Lumi), a self-hosted, modular Discord bot.
+It communicates exclusively with Lumi's `apps/api` process over an internal HTTP RPC bridge.
 
-## Architecture invariant
+For deep-dive architectural references, conventions, and step-by-step recipes, consult [`agents/`](agents/README.md).
+For design systems, tokens, and component UI rules, consult [`DESIGN.md`](DESIGN.md).
 
-This app never opens a Postgres or Redis connection and never holds the Discord bot token. Every
-read/write is proxied over an internal HTTP RPC bridge to Lumi's `apps/api` process. The only
-allowed way to reach the bridge is `src/lib/rpc.ts` (a `server-only` module) — a page, component,
-or Server Action must never call `fetch()` against `RPC_HTTP_URL` directly, and must never import
-Prisma/`pg`/`ioredis` at all.
+---
 
-- Reads: `src/lib/guild-reads.ts`, deduped per-request with React's `cache()`.
-- Mutations: `src/actions/*.ts`, one file per domain (guild, moderation, security, tempvc,
-  overrides, history, blocklist, advanced, system, user, auth) — Server Actions only, never a
-  client-side POST to the bridge.
-- `src/lib/auth-guards.ts`'s `authorizedGuild()` must be re-checked on every guild-scoped page
-  render and every guild-scoped Server Action — it is the IDOR guard and must never be trusted
-  from client-sent state (route params, form fields, etc.) without that check.
+## 1. System Invariants & Trust Boundaries
 
-## Settings pages derive from schema
+1. **Zero Database / Redis / Gateway Connections**:
+   This application never imports `pg`, `ioredis`, `@prisma/client`, or `discord.js` gateway clients. It holds no bot token.
+   All data reads, mutations, and actions route over the typed HTTP RPC bridge via `src/lib/rpc.ts`.
+2. **Server-Only Bridge**:
+   `src/lib/rpc.ts` is guarded with `import "server-only"`. The client browser never communicates directly with Lumi's RPC port.
+3. **Authorization & IDOR Defense**:
+   All guild-scoped routes and Server Actions MUST authenticate the user and verify guild management rights via `authorizedGuild()` or capability checks in `src/core/authorization/`. Never trust guild IDs passed directly from client components.
+4. **Strict Pinning of `@lumi-devs/contracts`**:
+   `package.json` pins `@lumi/contracts` and `@lumi/observability` to exact `npm:@lumi-devs/<pkg>@<version>`. Never loosen these to semver ranges (`^` or `~`). Mismatched versions will trigger `CONTRACT_MISMATCH` rejection at RPC-connect time.
 
-A settings page must never hand-list a module's fields, groups, or tabs. It derives them from
-`sectionsOf()` (imported from `@lumi/contracts`, which is backed by the module's `configSchema`
-on the Lumi side) and renders the result with `SectionTabs` + `ConfigGroupCard`. See
-`src/app/guild/[guildId]/security/page.tsx` or
-`src/app/guild/[guildId]/config/modules/logging/page.tsx` for the working pattern. Where a
-non-schema widget has to be placed by hand (a console, a record list), keep the field/action name
-it matches easy to grep, since nothing here enforces that match automatically the way the
-monorepo's own test suite does against Lumi's core source.
+---
 
-## Discord embeds / UI conventions
+## 2. Layered Architecture & Dependency Rules
 
-- Never construct `new EmbedBuilder()` — this app doesn't send Discord messages directly; any
-  "send a test message" action goes through an RPC call to Lumi, which owns Components-v2 card
-  rendering.
-- Icons: `lucide-react` only. Emoji are never used as an icon set; a module's own `emoji` field is
-  author-supplied metadata rendered via `components/ui/glyph.tsx`.
-- Design tokens live in `src/app/globals.css` as CSS custom properties (`--surface`, `--fg-muted`,
-  `--accent`, ...). Components consume those tokens, never a raw color or an alpha-blended
-  Tailwind color, or light mode breaks.
+The dashboard follows a strict, domain-driven, module-agnostic architecture:
 
-## Contract-version pin
+```text
+                  app/ (Next.js App Router: routing & layout only)
+                   │
+                   ▼
+               modules/ (Feature domains: moderation, security, etc.)
+                   │
+                   ▼
+              application/ (Use cases: GetGuildOverview, UpdateConfig)
+                   │
+                   ▼
+                 domain/ (Pure entities, capabilities, policies)
+                   │
+                   ▼
+                 ports/ (Abstract interfaces: GuildPort, ModulePort)
+                   ▲
+                   │
+            infrastructure/ (RPC repositories & DTO mappers)
+```
 
-`package.json` pins `@lumi/contracts` and `@lumi/observability` to exact
-`npm:@lumi-devs/<pkg>@<version>` specifiers. Lumi's `apps/api` rejects an incompatible dashboard
-build with `CONTRACT_MISMATCH` at RPC-connect time. Never loosen these to a range — bump the exact
-version pin (and re-run `bun install`) when Lumi cuts a new `contracts`/`observability` release,
-and check Lumi's own changelog for breaking RPC/view-shape changes before bumping.
+### Architectural Boundaries (Enforced by ESLint)
+- **`src/domain/`**: Pure business models and policies. Banned from importing React, Next.js, or `src/infrastructure/`.
+- **`src/ports/`**: Input/output boundary interfaces. Banned from importing `src/infrastructure/` or Next.js.
+- **`src/modules/`**: Feature slices (`src/modules/<name>/`).
+  - Must expose a public API through `index.ts`.
+  - Must never import internals from a sibling module (e.g. `src/modules/moderation` cannot import `src/modules/security/internal`).
+  - Banned from importing directly from `src/infrastructure/` (routes through `application/` or module hooks).
+- **`src/components/`**:
+  - `src/components/ui/`: Generic design system components (Radix primitives, Tailwind v4).
+  - `src/components/config/`: Schema-driven form and configuration widgets.
+  - `src/components/layout/`: Shared layout scaffolding and the `<ModuleBoundary>` component.
 
-## Running things
+---
 
-- `bun install`
-- `bun run typecheck` — `tsc --noEmit -p tsconfig.json`.
-- `bun run lint` — `eslint src` (plain ESLint, not `next lint`, which Next 16 removed).
-- `bun run test` — `bun test --parallel`.
-- `bun run build` — `next build` (standalone output).
+## 3. Data Fetching & Cache Management
 
-## Testing conventions
+- **Client State & Caching**: Powered by `@tanstack/react-query` via `<QueryProvider>` in `src/app/layout.tsx`.
+- **Module Hooks**:
+  - `useModuleConfig(guildId, moduleName)`: Reads module settings with built-in caching, background refetch, and loading states.
+  - `useUpdateModuleConfig({ guildId, moduleName })`: Mutation hook with automatic query cache invalidation and error propagation.
+- **Server Actions**:
+  - Located in `src/actions/*.ts`.
+  - Server actions MUST delegate orchestration to `src/application/` use cases rather than calling raw transport RPC directly.
 
-Tests live under `tests/`, mirroring `src/`. `tests/happydom-register.ts` and `tests/setup.ts` are
-both required as `bunfig.toml` preloads, in that order (`happydom-register.ts` must finish
-registering the DOM globals before `setup.ts`'s static imports, including
-`@testing-library/react`, resolve). `tests/setup.ts` also owns the process-wide `bun:test`
-`mock.module()` registrations for `server-only`, `#/actions/guild-actions`, `next/navigation`, and
-`#/lib/auth` — add new shared mocks there rather than declaring a competing per-file mock, since
-`mock.module()` replaces a module's exports globally and the last registration wins.
+---
+
+## 4. UI, Design Tokens & Schemas
+
+- **Icons**: `lucide-react` ONLY. Never use emojis as iconography; emojis are reserved for author-provided module metadata rendered with `Glyph`.
+- **Styling**: Tailwind CSS v4 and CSS custom properties in `src/app/globals.css` (`--surface`, `--fg-muted`, `--accent`).
+- **Schema-Driven Rendering**: Settings panels derive dynamically from `@lumi/contracts` `sectionsOf()` using `SectionTabs` and `ConfigGroupCard`. Never hardcode config fields that exist in Lumi's schema.
+- **State Handling**: Wrap module pages or sections with `<ModuleBoundary>` to handle `Loading`, `Disabled / Not Installed`, `Permission Denied`, and `Error` states uniformly.
+
+---
+
+## 5. Development & Verification Commands
+
+Development and test tools run through Bun within the workspace Nix environment:
+
+- `bun run typecheck` — Runs `tsc --noEmit -p tsconfig.json` with strict type checking.
+- `bun run lint` — Runs ESLint checking code style and architectural import boundaries.
+- `bun test` — Runs the full test suite (`bun test --parallel`) using HappyDOM.
+- `bun run build` — Builds the production Next.js standalone application bundle.
+
+Before completing any task, always ensure `typecheck`, `test`, and `lint` pass green.

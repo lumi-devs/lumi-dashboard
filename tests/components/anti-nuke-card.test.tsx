@@ -5,7 +5,7 @@ import { guildActionsMock } from "../setup";
 
 const { setGuildConfigField, setManyGuildConfigFields } = guildActionsMock;
 
-const { AntiNukeCard } = await import("#/components/guild/anti-nuke-card");
+const { AntiNukeCard } = await import("#/modules/security/components/anti-nuke-card");
 
 const NukeResponses = ["log", "quarantine", "ban"];
 

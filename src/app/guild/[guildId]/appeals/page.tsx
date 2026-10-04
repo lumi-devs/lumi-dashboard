@@ -4,7 +4,7 @@ import { requireGuild } from "#/lib/auth-guards";
 import { getGuildEntities } from "#/lib/guild-reads";
 import { rpc } from "#/lib/rpc";
 import { exportGuildAppeals } from "#/actions/guild-export-actions";
-import { GuildAppealsTable } from "#/components/guild/guild-appeals-table";
+import { GuildAppealsTable } from "#/modules/appeals/components/guild-appeals-table";
 import { DataBreakdownChart } from "#/components/account/data-breakdown-chart";
 import { Badge } from "#/components/ui/badge";
 import { buttonVariants } from "#/components/ui/button-variants";

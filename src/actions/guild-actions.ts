@@ -11,7 +11,23 @@ import { rpc } from "#/lib/rpc";
 import type { ActionResult } from "#/lib/action-result";
 import { guildAction } from "./_guard";
 
+import {
+  getModuleConfig as appGetModuleConfig,
+  updateModuleConfig as appUpdateModuleConfig,
+  toggleModule as appToggleModule,
+} from "#/application";
+
 export type { ActionResult };
+
+export async function getGuildModuleConfig(
+  guildId: string,
+  moduleName: string,
+): Promise<{ ok: true; config: Record<string, unknown> } | { ok: false; error: string }> {
+  return guildAction(guildId, async (session) => {
+    const config = await appGetModuleConfig(guildId, session.userId, moduleName);
+    return { ok: true, config };
+  });
+}
 
 export async function toggleGuildModule(
   guildId: string,
@@ -19,11 +35,7 @@ export async function toggleGuildModule(
   enabled: boolean,
 ): Promise<ActionResult> {
   return guildAction(guildId, async (session) => {
-    await rpc("guild.module.toggle", {
-      guildId,
-      actorId: session.userId,
-      data: { moduleName, enabled },
-    });
+    await appToggleModule(guildId, session.userId, moduleName, enabled);
     revalidatePath(`/guild/${guildId}`);
     return { ok: true };
   });
@@ -36,11 +48,7 @@ export async function setGuildConfigField(
   value: unknown,
 ): Promise<ActionResult> {
   return guildAction(guildId, async (session) => {
-    await rpc("guild.config.set", {
-      guildId,
-      actorId: session.userId,
-      data: { moduleName, key, value },
-    });
+    await appUpdateModuleConfig(guildId, session.userId, moduleName, key, value);
     // Layout-wide: the same field is editable from /security, /config/modules
     // and the logging page, so refreshing only the module route leaves whichever
     // page the save came from showing stale values.
@@ -55,11 +63,7 @@ export async function setManyGuildConfigFields(
   values: Record<string, unknown>,
 ): Promise<ActionResult> {
   return guildAction(guildId, async (session) => {
-    await rpc("guild.config.setMany", {
-      guildId,
-      actorId: session.userId,
-      data: { moduleName, values },
-    });
+    await appUpdateModuleConfig(guildId, session.userId, moduleName, values);
     // Layout-wide: the same field is editable from /security, /config/modules
     // and the logging page, so refreshing only the module route leaves whichever
     // page the save came from showing stale values.

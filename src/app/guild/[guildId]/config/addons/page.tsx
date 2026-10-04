@@ -1,7 +1,7 @@
 import { Package } from "lucide-react";
 import { requireGuild } from "#/lib/auth-guards";
 import { getGuildShell } from "#/lib/guild-reads";
-import { ModuleToggleGrid } from "#/components/guild/module-toggle-grid";
+import { ModuleToggleGrid } from "#/components/config/module-toggle-grid";
 import { PageHeader } from "#/components/ui/page-header";
 import { Badge } from "#/components/ui/badge";
 

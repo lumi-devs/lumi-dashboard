@@ -4,7 +4,7 @@ import { requireGuild } from "#/lib/auth-guards";
 import { getGuildEntities } from "#/lib/guild-reads";
 import { rpc } from "#/lib/rpc";
 import { exportGuildModNotes } from "#/actions/guild-export-actions";
-import { GuildModNotesTable } from "#/components/guild/guild-mod-notes-table";
+import { GuildModNotesTable } from "#/modules/moderation/index";
 import { Badge } from "#/components/ui/badge";
 import {
   Card,

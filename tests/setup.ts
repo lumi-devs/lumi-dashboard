@@ -38,6 +38,7 @@ vi.mock("server-only", () => ({}));
 // functions and configures per-test behavior with `.mockResolvedValue(...)`
 // etc. instead of declaring its own (necessarily partial) `vi.mock` factory.
 export const guildActionsMock = {
+  getGuildModuleConfig: vi.fn(),
   toggleGuildModule: vi.fn(),
   setGuildConfigField: vi.fn(),
   setManyGuildConfigFields: vi.fn(),

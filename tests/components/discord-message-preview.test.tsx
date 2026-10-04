@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import {
   DiscordMessagePreview,
   MarkdownLite,
-} from "#/components/guild/discord-message-preview";
+} from "#/components/config/discord-message-preview";
 
 describe("MarkdownLite", () => {
   it("renders bold, italic, code and links", () => {

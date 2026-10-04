@@ -10,13 +10,13 @@ import { StatsGrid } from "#/components/stats-grid";
 import { PageHeader } from "#/components/ui/page-header";
 import { SectionHead } from "#/components/ui/section-head";
 import { StatusPill, StatusStrip } from "#/components/ui/status-pill";
-import { ModulesStatusStrip } from "#/components/guild/modules-status-strip";
-import { NeedsAttentionPanel, type AttentionRow } from "#/components/guild/needs-attention-panel";
-import { OverviewRail } from "#/components/guild/overview-rail";
-import { RecentAuditTable } from "#/components/guild/recent-audit-table";
+import { ModulesStatusStrip } from "#/modules/overview/components/modules-status-strip";
+import { NeedsAttentionPanel, type AttentionRow } from "#/modules/overview/needs-attention-panel";
+import { OverviewRail } from "#/modules/overview/overview-rail";
+import { RecentAuditTable } from "#/modules/overview/recent-audit-table";
 import { buildModuleLabelIndex } from "#/lib/config-labels";
 import { buildHealthChecks } from "#/lib/health-checks";
-import { buildSetupIssues } from "#/components/guild/setup-issues";
+import { buildSetupIssues } from "#/modules/setup/setup-issues";
 import { extractMemberNames } from "#/lib/log-format";
 import { HealthyStatus } from "#/components/system/shard-fleet";
 

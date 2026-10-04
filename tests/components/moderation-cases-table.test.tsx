@@ -7,7 +7,7 @@ const revokeCase = vi.fn<() => Promise<ActionResult>>();
 vi.mock("#/actions/moderation-actions", () => ({ revokeCase }));
 
 const { ModerationCasesTable } = await import(
-  "#/components/guild/moderation-cases-table"
+  "#/modules/moderation/components/moderation-cases-table"
 );
 
 // jsdom ships the `<dialog>` element but not always its modal plumbing.

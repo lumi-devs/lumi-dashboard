@@ -2,7 +2,7 @@ import { Sparkles } from "lucide-react";
 import { requireGuild } from "#/lib/auth-guards";
 import { getGuildEntities, getGuildModule } from "#/lib/guild-reads";
 import { PageHeader } from "#/components/ui/page-header";
-import { SetupWizard } from "#/components/guild/setup-wizard";
+import { SetupWizard } from "#/modules/setup/setup-wizard";
 
 export default async function GuildSetupPage({
   params,

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "bun:test";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { FieldType, type ConfigField } from "@lumi/contracts";
-import { ConfigFieldInput, resolveTemplatePreview } from "#/components/guild/config-field-input";
+import { ConfigFieldInput, resolveTemplatePreview } from "#/components/config/config-field-input";
 import type { DashboardRoleView, DashboardChannelView } from "@lumi/contracts/views";
 
 const roles: DashboardRoleView[] = [

@@ -5,7 +5,7 @@ import { guildActionsMock } from "../setup";
 
 const { setManyGuildConfigFields } = guildActionsMock;
 
-const { ConfigGroupCard } = await import("#/components/guild/config-group-card");
+const { ConfigGroupCard } = await import("#/components/config/config-group-card");
 
 const GateActions = ["log", "kick", "timeout", "quarantine"];
 

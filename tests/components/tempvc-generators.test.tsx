@@ -10,7 +10,7 @@ vi.mock("#/actions/tempvc-actions", () => ({
 }));
 
 const { TempVcGenerators } = await import(
-  "#/components/guild/tempvc-generators"
+  "#/modules/tempvc/components/tempvc-generators"
 );
 
 const channels = [{ id: "111", name: "Lobby", type: 2 }];

@@ -1,7 +1,7 @@
 import { Settings } from "lucide-react";
 import { requireGuild } from "#/lib/auth-guards";
 import { getGuildShell } from "#/lib/guild-reads";
-import { GeneralSettingsForm } from "#/components/guild/general-settings-form";
+import { GeneralSettingsForm } from "#/modules/guild-config/general-settings-form";
 import { PageHeader } from "#/components/ui/page-header";
 
 export default async function GuildGeneralSettingsPage({

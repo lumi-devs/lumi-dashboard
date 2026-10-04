@@ -7,7 +7,7 @@ import { guildActionsMock } from "../setup";
 const { setGuildSettings } = guildActionsMock;
 
 const { GeneralSettingsForm } = await import(
-  "#/components/guild/general-settings-form"
+  "#/modules/guild-config/general-settings-form"
 );
 
 function baseValues() {

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import dynamic from "next/dynamic";
 import { Geist, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "#/components/theme-provider";
+import { QueryProvider } from "#/components/query-provider";
 import "./globals.css";
 
 // The component itself already guards against SSR/CSR mismatch (renders
@@ -72,10 +73,12 @@ export default function RootLayout({
       className={`${display.variable} ${mono.variable}`}
     >
       <body className="font-sans antialiased">
-        <ThemeProvider>
-          {children}
-          <CookieConsent />
-        </ThemeProvider>
+        <QueryProvider>
+          <ThemeProvider>
+            {children}
+            <CookieConsent />
+          </ThemeProvider>
+        </QueryProvider>
       </body>
     </html>
   );

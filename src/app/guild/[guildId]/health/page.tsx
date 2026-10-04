@@ -2,7 +2,7 @@ import { Activity } from "lucide-react";
 import { requireGuild } from "#/lib/auth-guards";
 import { getGuildEntities, getGuildModule } from "#/lib/guild-reads";
 import { PageHeader } from "#/components/ui/page-header";
-import { HealthCheckList } from "#/components/guild/health-check-list";
+import { HealthCheckList } from "#/modules/overview/health-check-list";
 
 export default async function GuildHealthPage({
   params,

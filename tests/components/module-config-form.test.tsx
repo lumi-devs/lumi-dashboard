@@ -7,7 +7,7 @@ import { guildActionsMock } from "../setup";
 const { setGuildConfigField, toggleGuildModule } = guildActionsMock;
 
 const { ModuleConfigForm } = await import(
-  "#/components/guild/module-config-form"
+  "#/components/config/module-config-form"
 );
 
 function makeModule(): DashboardModuleView {

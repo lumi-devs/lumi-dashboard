@@ -3,7 +3,7 @@ import { SearchX } from "lucide-react";
 import { requireGuild } from "#/lib/auth-guards";
 import { getGuildEntities, getGuildModule, getGuildShell } from "#/lib/guild-reads";
 import { rpc } from "#/lib/rpc";
-import { OverridesBoard } from "#/components/guild/overrides-board";
+import { OverridesBoard } from "#/modules/security/index";
 import { Badge } from "#/components/ui/badge";
 import { buttonVariants } from "#/components/ui/button-variants";
 import { Card, CardHeader, CardTitle, CardDescription } from "#/components/ui/card";

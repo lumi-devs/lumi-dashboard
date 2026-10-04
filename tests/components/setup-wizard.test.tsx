@@ -5,7 +5,7 @@ import { guildActionsMock } from "../setup";
 
 const { setManyGuildConfigFields } = guildActionsMock;
 
-const { SetupWizard } = await import("#/components/guild/setup-wizard");
+const { SetupWizard } = await import("#/modules/setup/setup-wizard");
 
 function channel(key: string, label: string): ConfigField {
   return { key, label, type: FieldType.Channel, description: `${label} description.` };

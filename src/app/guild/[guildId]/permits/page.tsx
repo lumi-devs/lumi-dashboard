@@ -2,7 +2,7 @@ import { Shield } from "lucide-react";
 import { requireGuild } from "#/lib/auth-guards";
 import { getGuildEntities } from "#/lib/guild-reads";
 import { rpc } from "#/lib/rpc";
-import { PermitsBoard } from "#/components/guild/permits-board";
+import { PermitsBoard } from "#/modules/guild-config/permits-board";
 import { PageHeader } from "#/components/ui/page-header";
 
 export default async function PermitsPage({

@@ -3,8 +3,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import {
   TempVcPreviewPlayground,
   resolvePreviewName,
-} from "#/components/guild/tempvc-preview-playground";
-import { VerificationPreviewPlayground } from "#/components/guild/verification-preview-playground";
+} from "#/modules/tempvc/components/tempvc-preview-playground";
+import { VerificationPreviewPlayground } from "#/modules/verification/components/verification-preview-playground";
 
 describe("resolvePreviewName", () => {
   const who = { number: 3, username: "alex", displayName: "Alex" };

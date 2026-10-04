@@ -1,7 +1,7 @@
 import { Puzzle } from "lucide-react";
 import { requireGuild } from "#/lib/auth-guards";
 import { getGuildShell, getGuildEntities, getGuildModule } from "#/lib/guild-reads";
-import { ModuleCardGrid } from "#/components/guild/module-card-grid";
+import { ModuleCardGrid } from "#/components/config/module-card-grid";
 import { PageHeader } from "#/components/ui/page-header";
 import { Badge } from "#/components/ui/badge";
 import { buildHealthChecks } from "#/lib/health-checks";

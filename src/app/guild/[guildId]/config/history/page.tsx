@@ -4,7 +4,7 @@ import { requireGuild } from "#/lib/auth-guards";
 import { getGuildShell, getGuildEntities } from "#/lib/guild-reads";
 import { rpc } from "#/lib/rpc";
 import { exportGuildConfigHistory } from "#/actions/guild-export-actions";
-import { ConfigHistoryList } from "#/components/guild/config-history-list";
+import { ConfigHistoryList } from "#/components/config/config-history-list";
 import { DataBreakdownChart } from "#/components/account/data-breakdown-chart";
 import { Alert } from "#/components/ui/alert";
 import { Badge } from "#/components/ui/badge";

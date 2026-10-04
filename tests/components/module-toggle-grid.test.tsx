@@ -6,7 +6,7 @@ import { guildActionsMock } from "../setup";
 const { toggleGuildModule } = guildActionsMock;
 
 const { ModuleToggleGrid } = await import(
-  "#/components/guild/module-toggle-grid"
+  "#/components/config/module-toggle-grid"
 );
 
 function makeModule(overrides: Partial<DashboardModuleView> = {}): DashboardModuleView {

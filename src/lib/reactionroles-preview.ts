@@ -3,8 +3,8 @@ import type {
   PreviewButton,
   PreviewContainer,
   PreviewV2Component,
-} from "#/components/guild/discord-message-preview";
-import { blockToPreview } from "#/components/guild/message-builder-v2";
+} from "#/components/config/discord-message-preview";
+import { blockToPreview } from "#/components/config/message-builder-v2";
 
 type MenuPreviewMode = "buttons" | "select" | "reactions";
 

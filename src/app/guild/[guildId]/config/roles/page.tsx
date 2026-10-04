@@ -2,7 +2,7 @@ import { Ticket, PlugZap } from "lucide-react";
 import { requireGuild } from "#/lib/auth-guards";
 import { getGuildEntities } from "#/lib/guild-reads";
 import { rpc } from "#/lib/rpc";
-import { ReactionRolesManager } from "#/components/guild/reactionroles-manager";
+import { ReactionRolesManager } from "#/modules/reaction-roles/index";
 import { Badge } from "#/components/ui/badge";
 import {
   Card,

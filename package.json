@@ -21,6 +21,7 @@
   "dependencies": {
     "@lumi/contracts": "npm:@lumi-devs/contracts@latest",
     "@lumi/observability": "npm:@lumi-devs/observability@latest",
+    "@tanstack/react-query": "^5.104.1",
     "@tanstack/react-table": "9.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

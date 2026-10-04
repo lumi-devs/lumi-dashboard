@@ -2,9 +2,11 @@ import { Mic, PlugZap } from "lucide-react";
 import { requireGuild } from "#/lib/auth-guards";
 import { getGuildShell, getGuildEntities } from "#/lib/guild-reads";
 import { rpc } from "#/lib/rpc";
-import { TempVcGenerators } from "#/components/guild/tempvc-generators";
-import { TempVcPreviewPlayground } from "#/components/guild/tempvc-preview-playground";
-import { TempVcLiveChannels } from "#/components/guild/tempvc-live-channels";
+import {
+  TempVcGenerators,
+  TempVcPreviewPlayground,
+  TempVcLiveChannels,
+} from "#/modules/tempvc/index";
 import { Badge } from "#/components/ui/badge";
 import {
   Card,

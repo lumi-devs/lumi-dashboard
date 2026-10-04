@@ -60,6 +60,58 @@ export default tseslint.config(
     },
   },
   {
+    files: ['src/domain/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            { name: 'next', message: 'Domain layer must not depend on Next.js.' },
+            { name: 'react', message: 'Domain layer must not depend on React.' },
+            { name: 'react-dom', message: 'Domain layer must not depend on React DOM.' },
+          ],
+          patterns: [
+            { group: ['next/**', 'next'], message: 'Domain layer must not depend on Next.js.' },
+            { group: ['react/**', 'react-dom/**'], message: 'Domain layer must not depend on React.' },
+            { group: ['#/infrastructure/**', '#/infrastructure'], message: 'Domain layer must not depend on infrastructure layer.' },
+            { group: ['#/app/**', '#/app'], message: 'Domain layer must not depend on app layer.' },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/ports/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            { name: 'next', message: 'Ports layer must not depend on Next.js.' },
+          ],
+          patterns: [
+            { group: ['next/**', 'next'], message: 'Ports layer must not depend on Next.js.' },
+            { group: ['#/infrastructure/**', '#/infrastructure'], message: 'Ports layer must not depend on infrastructure layer.' },
+            { group: ['#/app/**', '#/app'], message: 'Ports layer must not depend on app layer.' },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/modules/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            { group: ['#/infrastructure/**', '#/infrastructure'], message: 'Modules must not depend directly on infrastructure layer.' },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['tests/**/*.{ts,tsx}'],
     rules: {
       // bun:test types vi.mock/mock.module as returning a Promise, but module mocks are hoisted and never awaited.

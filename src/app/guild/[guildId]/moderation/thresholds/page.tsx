@@ -1,7 +1,7 @@
 import { AlertTriangle } from "lucide-react";
 import { requireGuild } from "#/lib/auth-guards";
 import { rpc } from "#/lib/rpc";
-import { WarnThresholdLadder } from "#/components/guild/warn-threshold-ladder";
+import { WarnThresholdLadder } from "#/modules/moderation/index";
 import { Badge } from "#/components/ui/badge";
 import {
   Card,

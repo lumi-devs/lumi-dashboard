@@ -9,13 +9,11 @@ import {
 } from "#/lib/guild-reads";
 import { rpc } from "#/lib/rpc";
 import { toggleGuildModule } from "#/actions/guild-actions";
-import { PanicModeConsole } from "#/components/guild/panic-mode-console";
-import { VerificationPanelCard } from "#/components/guild/verification-panel-card";
-import { VerificationPreviewPlayground } from "#/components/guild/verification-preview-playground";
-import { AntiNukeCard } from "#/components/guild/anti-nuke-card";
-import { ConfigGroupCard } from "#/components/guild/config-group-card";
-import { BackupsCard } from "#/components/guild/backups-card";
-import { ModuleMasterToggle } from "#/components/guild/module-master-toggle";
+import { PanicModeConsole, AntiNukeCard } from "#/modules/security/index";
+import { VerificationPanelCard, VerificationPreviewPlayground } from "#/modules/verification/index";
+import { ConfigGroupCard } from "#/components/config/config-group-card";
+import { BackupsCard } from "#/modules/guild-config/backups-card";
+import { ModuleMasterToggle } from "#/components/config/module-master-toggle";
 import { Card, CardBody, CardDescription, CardHeader, CardTitle } from "#/components/ui/card";
 import { EmptyState } from "#/components/ui/empty-state";
 import { LoadFailure } from "#/components/ui/load-failure";

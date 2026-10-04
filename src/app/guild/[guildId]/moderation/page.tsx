@@ -4,7 +4,7 @@ import { requireGuild } from "#/lib/auth-guards";
 import { getGuildEntities } from "#/lib/guild-reads";
 import { rpc } from "#/lib/rpc";
 import { exportGuildCases } from "#/actions/guild-export-actions";
-import { ModerationCasesTable } from "#/components/guild/moderation-cases-table";
+import { ModerationCasesTable } from "#/modules/moderation/index";
 import { DataBreakdownChart } from "#/components/account/data-breakdown-chart";
 import { Alert } from "#/components/ui/alert";
 import { Badge } from "#/components/ui/badge";
