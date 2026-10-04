@@ -18,7 +18,7 @@ import { buildModuleLabelIndex } from "#/lib/config-labels";
 import { buildHealthChecks } from "#/lib/health-checks";
 import { buildSetupIssues } from "#/modules/setup/setup-issues";
 import { extractMemberNames } from "#/lib/log-format";
-import { HealthyStatus } from "#/components/system/shard-fleet";
+import { isShardHealthy } from "#/components/system/shard-fleet";
 
 const FeedRows = 6;
 
@@ -86,7 +86,7 @@ export default async function GuildOverviewPage({
   ).length;
   const openAppeals = appeals?.total ?? 0;
   const healthyShards =
-    shards?.shards.filter((s) => s.status === HealthyStatus).length ?? 0;
+    shards?.shards.filter((s) => isShardHealthy(s)).length ?? 0;
 
   const failingChecks = buildHealthChecks(
     guildId,
@@ -106,7 +106,11 @@ export default async function GuildOverviewPage({
       actionLabel: "Details",
     });
   }
-  if (shards && (shards.missingShardIds.length > 0 || healthyShards < shards.shardCount)) {
+  if (
+    shards &&
+    shards.shardCount > 0 &&
+    (shards.missingShardIds.length > 0 || healthyShards < shards.shardCount)
+  ) {
     attentionRows.push({
       id: "shard-down",
       severity: "critical",

@@ -11,7 +11,7 @@ import {
   resolveConfigValue,
   type ModuleLabelIndex,
 } from "#/lib/config-labels";
-import { HealthyStatus, OfflineStatuses } from "#/components/system/shard-fleet";
+import { isShardHealthy, OfflineStatuses } from "#/components/system/shard-fleet";
 import type { ConfigHistoryEntryView, DashboardChannelView, DashboardRoleView } from "@lumi/contracts/views";
 import type { RpcOutput } from "@lumi/contracts/rpc";
 
@@ -76,7 +76,7 @@ function ShardHealth({ shards }: { shards: RpcOutput<"system.shards.get"> }) {
           const shard = byId.get(id);
           const tone = !shard
             ? "bad"
-            : shard.status === HealthyStatus
+            : isShardHealthy(shard)
               ? "good"
               : OfflineStatuses.has(shard.status)
                 ? "bad"

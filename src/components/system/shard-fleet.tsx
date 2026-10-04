@@ -17,8 +17,12 @@ export const HealthyStatus = "Ready";
 export const OfflineStatuses = new Set(["Disconnected", "Idle"]);
 const SlowPingMs = 500;
 
+export function isShardHealthy(shard: { status: string; stale?: boolean }): boolean {
+  return shard.status.toLowerCase() === "ready" && !shard.stale;
+}
+
 function statusVariant(status: string) {
-  if (status === HealthyStatus) return "success" as const;
+  if (status.toLowerCase() === "ready") return "success" as const;
   if (OfflineStatuses.has(status)) return "danger" as const;
   return "warning" as const;
 }
@@ -294,7 +298,7 @@ export function ShardFleet({ data }: { data: RpcOutput<"system.shards.get"> }) {
     );
   }
 
-  const healthy = data.shards.filter((s) => s.status === HealthyStatus).length;
+  const healthy = data.shards.filter((s) => isShardHealthy(s)).length;
 
   return (
     <div className="flex flex-col gap-4">
