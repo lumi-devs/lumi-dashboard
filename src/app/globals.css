@@ -23,55 +23,59 @@
  * the same glass chrome, the same accent, the same shadow language.
  */
 
+/* Light is base; dark is applied by media query + [data-theme="dark"]
+ * blocks below. (Regression fix: base block had been overwritten with dark
+ * values, which made the Light option in theme toggle no-op.) */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* Surfaces — Deep midnight navy */
-  --bg: #050816;
-  --bg-subtle: #080D20;
-  --surface: #0B1124;
-  --surface-hover: #121A33;
-  --surface-active: #192447;
+  /* Surfaces — icy blue-white */
+  --bg: #F4F8FF;
+  --bg-subtle: #EAF1FF;
+  --surface: #FFFFFF;
+  --surface-hover: #F0F5FF;
+  --surface-active: #E3ECFD;
 
   /* Lines */
-  --border: #1C2644;
-  --border-soft: #141c33;
-  --border-strong: #2a375f;
+  --border: #D5E2F7;
+  --border-soft: #E4ECF9;
+  --border-strong: #B9CBEA;
 
   /* Text */
-  --fg: #F2F6FF;
-  --fg-muted: #8A97B8;
-  --fg-subtle: #627193;
+  --fg: #0B1124;
+  --fg-muted: #5A6785;
+  --fg-subtle: #66728F;
   --fg-on-accent: #FFFFFF;
 
-  /* Electric blue & bright sky/cyan */
+  /* Electric blue & sky */
   --accent: #2F5BFF;
-  --accent-hover: #264de3;
-  --accent-secondary: #3BB4FF;
-  --accent-soft: rgba(47, 91, 255, 0.15);
-  --accent-fg: #60A5FA;
-  --accent-glow: #9FD8FF;
+  --accent-hover: #264DE3;
+  --accent-secondary: #0A8FE0;
+  --accent-soft: rgba(47, 91, 255, 0.09);
+  --accent-fg: #2448D6;
+  --accent-glow: #BFE3FF;
 
   /* Status */
-  --success: #34D399;
-  --success-soft: rgba(52, 211, 153, 0.14);
-  --warning: #FBBF24;
-  --warning-soft: rgba(251, 191, 36, 0.14);
-  --danger: #F87171;
-  --danger-soft: rgba(248, 113, 113, 0.14);
+  --success: #047857;
+  --success-soft: rgba(4, 120, 87, 0.10);
+  --warning: #B45309;
+  --warning-soft: rgba(180, 83, 9, 0.10);
+  --danger: #DC2626;
+  --danger-soft: rgba(220, 38, 38, 0.09);
 
   /* Scrim behind modal */
-  --overlay: rgba(2, 4, 10, 0.7);
-  --ring: rgba(59, 180, 255, 0.45);
+  --overlay: rgba(10, 12, 18, 0.45);
+  --ring: rgba(47, 91, 255, 0.38);
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 4px 20px -2px rgba(5, 8, 22, 0.7);
-  --shadow-lg: 0 12px 32px -4px rgba(5, 8, 22, 0.85);
-  --shadow-accent: 0 0 20px rgba(47, 91, 255, 0.35);
-  --shadow-glow-accent: 0 0 30px rgba(59, 180, 255, 0.28);
+  /* Light uses soft blue-tinted shadows; glow is dark-theme idiom. */
+  --shadow-sm: 0 1px 2px rgba(11, 17, 36, 0.06);
+  --shadow-md: 0 1px 2px rgba(11, 17, 36, 0.05), 0 10px 30px -10px rgba(47, 91, 255, 0.15);
+  --shadow-lg: 0 2px 4px rgba(11, 17, 36, 0.06), 0 24px 60px -16px rgba(47, 91, 255, 0.20);
+  --shadow-accent: 0 10px 28px -8px rgba(47, 91, 255, 0.30);
+  --shadow-glow-accent: 0 16px 40px -12px rgba(47, 91, 255, 0.22);
 
-  --glass-bg: rgba(11, 17, 36, 0.75);
-  --glass-border: rgba(59, 180, 255, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.6);
   --glass-blur-sm: 10px;
   --glass-blur-md: 20px;
   --glass-blur-lg: 40px;
