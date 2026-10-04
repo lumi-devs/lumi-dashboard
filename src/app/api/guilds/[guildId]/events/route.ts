@@ -18,25 +18,32 @@ export async function GET(
   upstream.searchParams.set("guildId", guildId);
   upstream.searchParams.set("actorId", session.userId);
 
-  const upstreamRes = await fetch(upstream, {
-    headers: env.rpcInternalToken ? { authorization: `Bearer ${env.rpcInternalToken}` } : {},
-    // Ties the upstream apps/api connection's lifetime to this one, so a
-    // client tab closing tears down its Redis fan-out registration instead
-    // of leaking a connection until `apps/api`'s own idle detection kicks in.
-    signal: request.signal,
-  });
+  try {
+    const upstreamRes = await fetch(upstream, {
+      headers: env.rpcInternalToken ? { authorization: `Bearer ${env.rpcInternalToken}` } : {},
+      // Ties the upstream apps/api connection's lifetime to this one, so a
+      // client tab closing tears down its Redis fan-out registration instead
+      // of leaking a connection until `apps/api`'s own idle detection kicks in.
+      signal: request.signal,
+    });
 
-  if (!upstreamRes.ok || !upstreamRes.body) {
-    return new Response("Upstream SSE unavailable", { status: 502 });
+    if (!upstreamRes.ok || !upstreamRes.body) {
+      return new Response("Upstream SSE unavailable", { status: 502 });
+    }
+
+    return new Response(upstreamRes.body, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+        "X-Accel-Buffering": "no",
+      },
+    });
+  } catch (err: unknown) {
+    if (request.signal.aborted) {
+      return new Response(null, { status: 499 });
+    }
+    return new Response("Upstream connection closed", { status: 502 });
   }
-
-  return new Response(upstreamRes.body, {
-    status: 200,
-    headers: {
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
-      "X-Accel-Buffering": "no",
-    },
-  });
 }
