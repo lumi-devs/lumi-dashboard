@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Check, ChevronDown, ChevronUp, CircleSlash, Copy, Cpu, Network, Terminal } from "lucide-react";
 import type { ClusterReplicaView, RpcOutput, ShardStateView } from "@lumi/contracts/rpc";
 import { Alert } from "#/components/ui/alert";
@@ -180,8 +180,8 @@ function ShardRows({
         <TBody ref={bodyRef}>
           {rows.map(({ shardId, shard }) =>
             shard ? (
-              <>
-                <TR key={shardId}>
+              <Fragment key={shardId}>
+                <TR>
                   <TD className="font-mono tabular text-fg">{shardId}</TD>
                   <TD>
                     <Badge variant={statusVariant(shard.status)} dot>
@@ -234,7 +234,7 @@ function ShardRows({
                     </TD>
                   </TR>
                 ) : null}
-              </>
+              </Fragment>
             ) : (
               <TR key={shardId} className="bg-danger-soft hover:bg-danger-soft">
                 <TD className="font-mono tabular font-semibold text-danger">
