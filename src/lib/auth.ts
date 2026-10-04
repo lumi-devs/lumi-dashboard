@@ -33,9 +33,9 @@ const authzCache = new Map<string, AuthzSnapshot>();
 async function refreshAuthorization(token: JWT): Promise<void> {
   const userId = token.userId ?? "";
   const cached = authzCache.get(userId);
-  if (cached && Date.now() - cached.at < AuthzTtlMs) {
+  if (cached && cached.isBotOwner && Date.now() - cached.at < AuthzTtlMs) {
     if (cached.guilds) token.guilds = cached.guilds;
-    if (cached.isBotOwner !== undefined) token.isBotOwner = cached.isBotOwner;
+    token.isBotOwner = cached.isBotOwner;
     token.authRefreshedAt = cached.at;
     return;
   }
@@ -122,7 +122,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         await refreshAuthorization(token);
         return token;
       }
-      if (Date.now() - (token.authRefreshedAt ?? 0) > AuthzTtlMs) {
+      if (!token.isBotOwner || Date.now() - (token.authRefreshedAt ?? 0) > AuthzTtlMs) {
         await refreshAuthorization(token);
       }
       return token;
