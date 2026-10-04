@@ -76,7 +76,7 @@ export const env = {
   /** NextAuth session/JWT encryption secret. */
   authSecret: resolveAuthSecret(),
   host: envStr("DASHBOARD_HOST", "0.0.0.0"),
-  port: envInt("DASHBOARD_PORT", 8080),
+  port: envInt("DASHBOARD_PORT", 3000),
   get trustedProxyHops(): number {
     return resolveTrustedHops();
   },

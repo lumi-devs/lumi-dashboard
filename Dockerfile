@@ -31,6 +31,6 @@ COPY --from=build --chown=bun:bun /app/.next/standalone ./
 COPY --from=build --chown=bun:bun /app/.next/static ./.next/static
 COPY --from=build --chown=bun:bun /app/public ./public
 USER bun
-EXPOSE 8080
+EXPOSE 3000
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["sh", "-c", "PORT=${DASHBOARD_PORT:-8080} HOSTNAME=${DASHBOARD_HOST:-0.0.0.0} exec node server.js"]
+CMD ["sh", "-c", "PORT=${DASHBOARD_PORT:-3000} HOSTNAME=${DASHBOARD_HOST:-0.0.0.0} exec node server.js"]

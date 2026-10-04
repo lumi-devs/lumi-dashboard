@@ -11,9 +11,9 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "dev": "next dev -H \"${DASHBOARD_HOST:-0.0.0.0}\" -p \"${DASHBOARD_PORT:-8080}\"",
+    "dev": "next dev -H \"${DASHBOARD_HOST:-0.0.0.0}\" -p \"${DASHBOARD_PORT:-3000}\"",
     "build": "next build",
-    "start": "bun .next/standalone/server.js",
+    "start": "PORT=${DASHBOARD_PORT:-3000} HOSTNAME=${DASHBOARD_HOST:-0.0.0.0} bun .next/standalone/server.js",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "bun test --parallel"
