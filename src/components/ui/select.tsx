@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { Check, ChevronDown } from "lucide-react";
+import { Popover as PopoverPrimitive } from "radix-ui";
 import { cn } from "#/lib/utils";
 
 interface SelectOption {
@@ -41,7 +42,6 @@ export function Select({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
-  const rootRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const listId = useId();
 
@@ -73,13 +73,9 @@ export function Select({
   }
 
   useEffect(() => {
-    if (!open) return;
-    if (searchable) searchRef.current?.focus();
-    function onPointerDown(e: PointerEvent) {
-      if (!rootRef.current?.contains(e.target as Node)) closeList();
+    if (open && searchable) {
+      setTimeout(() => searchRef.current?.focus(), 0);
     }
-    document.addEventListener("pointerdown", onPointerDown);
-    return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [open, searchable]);
 
   useEffect(() => {
@@ -129,100 +125,112 @@ export function Select({
     } else if (e.key === "Escape") {
       e.preventDefault();
       closeList();
-    } else if (e.key === "Tab") {
-      closeList();
     }
   }
 
   return (
-    <div ref={rootRef} className={cn("relative w-full", className)}>
-      <button
-        type="button"
-        id={id}
-        role="combobox"
-        aria-expanded={open}
-        aria-controls={listId}
-        aria-activedescendant={open && filtered[active] ? `${listId}-${active}` : undefined}
-        aria-label={ariaLabel}
-        aria-labelledby={ariaLabelledby}
-        disabled={disabled}
-        onClick={() => (open ? closeList() : openList())}
-        onKeyDown={onTriggerKeyDown}
-        className={cn(
-          "flex h-8 w-full cursor-pointer items-center justify-between gap-2 rounded-control border border-border bg-bg-subtle px-2.5",
-          "text-[15px] text-fg transition-colors outline-none",
-          "hover:border-border-strong focus:border-accent focus:bg-surface",
-          "disabled:cursor-not-allowed disabled:opacity-50",
-          selected ? undefined : "text-fg-subtle",
-        )}
-      >
-        <span className="min-w-0 flex-1 truncate text-left">
-          {selected ? selected.label : placeholder}
-        </span>
-        <ChevronDown
-          aria-hidden
-          className={cn(
-            "size-3.5 shrink-0 text-fg-subtle transition-transform",
-            open && "rotate-180",
-          )}
-        />
-      </button>
-      {name ? <input type="hidden" name={name} value={value} /> : null}
-      {open ? (
-        <div
-          onKeyDown={onListKeyDown}
-          className="absolute top-full right-0 left-0 z-50 mt-1 overflow-hidden rounded-control border border-border bg-surface shadow-e3"
-        >
-          {searchable ? (
-            <div className="border-b border-border p-1.5">
-              <input
-                ref={searchRef}
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search…"
-                aria-label="Search options"
-                className="h-8 w-full rounded-control border border-border bg-bg-subtle px-2.5 text-[14px] text-fg outline-none placeholder:text-fg-subtle focus:border-accent"
-              />
-            </div>
-          ) : null}
-          <ul
-            id={listId}
-            role="listbox"
-            aria-label={ariaLabel ?? "Options"}
-            className="max-h-56 overflow-y-auto p-1"
-          >
-            {filtered.length === 0 ? (
-              <li role="status" className="px-2.5 py-2 text-[14px] text-fg-subtle">
-                No matches
-              </li>
-            ) : (
-              filtered.map((option, index) => {
-                const isSelected = option.value === value;
-                return (
-                  <li
-                    key={option.value || "__empty"}
-                    id={`${listId}-${index}`}
-                    role="option"
-                    aria-selected={isSelected}
-                    onMouseEnter={() => setActive(index)}
-                    onClick={() => choose(option.value)}
-                    className={cn(
-                      "flex cursor-pointer items-center justify-between gap-2 rounded-control px-2.5 py-1.5 text-[14px]",
-                      index === active ? "bg-accent-soft text-accent-fg" : "text-fg",
-                    )}
-                  >
-                    <span className="min-w-0 flex-1 truncate">{option.label}</span>
-                    {isSelected ? (
-                      <Check aria-hidden className="size-3.5 shrink-0" />
-                    ) : null}
-                  </li>
-                );
-              })
+    <PopoverPrimitive.Root open={open} onOpenChange={setOpen}>
+      <div className={cn("relative w-full", className)}>
+        <PopoverPrimitive.Trigger asChild>
+          <button
+            type="button"
+            id={id}
+            role="combobox"
+            aria-expanded={open}
+            aria-controls={listId}
+            aria-activedescendant={open && filtered[active] ? `${listId}-${active}` : undefined}
+            aria-label={ariaLabel}
+            aria-labelledby={ariaLabelledby}
+            disabled={disabled}
+            onClick={() => (open ? closeList() : openList())}
+            onKeyDown={onTriggerKeyDown}
+            className={cn(
+              "flex h-8 w-full cursor-pointer items-center justify-between gap-2 rounded-control border border-border bg-surface px-2.5",
+              "text-[14px] text-fg transition-colors outline-none",
+              "hover:border-border-strong focus:border-accent focus:bg-surface",
+              "disabled:cursor-not-allowed disabled:opacity-50",
+              selected ? undefined : "text-fg-subtle",
             )}
-          </ul>
-        </div>
-      ) : null}
-    </div>
+          >
+            <span className="min-w-0 flex-1 truncate text-left">
+              {selected ? selected.label : placeholder}
+            </span>
+            <ChevronDown
+              aria-hidden
+              className={cn(
+                "size-3.5 shrink-0 text-fg-subtle transition-transform duration-fast",
+                open && "rotate-180",
+              )}
+            />
+          </button>
+        </PopoverPrimitive.Trigger>
+        {name ? <input type="hidden" name={name} value={value} /> : null}
+
+        <PopoverPrimitive.Portal>
+          <PopoverPrimitive.Content
+            side="bottom"
+            align="start"
+            sideOffset={4}
+            collisionPadding={8}
+            avoidCollisions={true}
+            onKeyDown={onListKeyDown}
+            className={cn(
+              "z-50 w-[var(--radix-popover-trigger-width)] min-w-44 max-h-[var(--radix-popover-content-available-height,320px)]",
+              "overflow-hidden rounded-control border border-border bg-surface shadow-e3",
+              "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+            )}
+          >
+            {searchable ? (
+              <div className="border-b border-border p-1.5">
+                <input
+                  ref={searchRef}
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search…"
+                  aria-label="Search options"
+                  className="h-8 w-full rounded-control border border-border bg-surface-hover px-2.5 text-[14px] text-fg outline-none placeholder:text-fg-subtle focus:border-accent"
+                />
+              </div>
+            ) : null}
+            <ul
+              id={listId}
+              role="listbox"
+              aria-label={ariaLabel ?? "Options"}
+              className="max-h-56 overflow-y-auto p-1"
+            >
+              {filtered.length === 0 ? (
+                <li role="status" className="px-2.5 py-2 text-[14px] text-fg-subtle">
+                  No matches
+                </li>
+              ) : (
+                filtered.map((option, index) => {
+                  const isSelected = option.value === value;
+                  return (
+                    <li
+                      key={option.value || "__empty"}
+                      id={`${listId}-${index}`}
+                      role="option"
+                      aria-selected={isSelected}
+                      onMouseEnter={() => setActive(index)}
+                      onClick={() => choose(option.value)}
+                      className={cn(
+                        "flex cursor-pointer items-center justify-between gap-2 rounded-control px-2.5 py-1.5 text-[14px]",
+                        index === active ? "bg-accent-soft text-accent-fg" : "text-fg",
+                      )}
+                    >
+                      <span className="min-w-0 flex-1 truncate">{option.label}</span>
+                      {isSelected ? (
+                        <Check aria-hidden className="size-3.5 shrink-0" />
+                      ) : null}
+                    </li>
+                  );
+                })
+              )}
+            </ul>
+          </PopoverPrimitive.Content>
+        </PopoverPrimitive.Portal>
+      </div>
+    </PopoverPrimitive.Root>
   );
 }

@@ -24,79 +24,62 @@
  */
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  /* Surfaces — cool paper, not warm cream. */
-  --bg: #f4f5f8;
-  --bg-subtle: #ebedf2;
-  --surface: #ffffff;
-  --surface-hover: #f5f6fa;
-  --surface-active: #eaedf3;
+  /* Surfaces — Deep midnight navy */
+  --bg: #050816;
+  --bg-subtle: #080D20;
+  --surface: #0B1124;
+  --surface-hover: #121A33;
+  --surface-active: #192447;
 
   /* Lines */
-  --border: #d3d8e2;
-  --border-soft: #e2e5ec;
-  --border-strong: #b7bfcf;
+  --border: #1C2644;
+  --border-soft: #141c33;
+  --border-strong: #2a375f;
 
   /* Text */
-  --fg: #14161c;
-  --fg-muted: #5a6270;
-  --fg-subtle: #8b93a3;
-  --fg-on-accent: #ffffff;
+  --fg: #F2F6FF;
+  --fg-muted: #8A97B8;
+  --fg-subtle: #627193;
+  --fg-on-accent: #FFFFFF;
 
-  /* Cobalt — the one saturated colour in the system. Reserved for the
-   * primary action and the active route, never for decoration. */
-  --accent: #3B5BDB;
-  --accent-hover: #2B4BC6;
-  --accent-soft: rgba(59, 91, 219, 0.09);
-  --accent-fg: #2B4BC6;
-  --accent-glow: #4C6EF5;
+  /* Electric blue & bright sky/cyan */
+  --accent: #2F5BFF;
+  --accent-hover: #264de3;
+  --accent-secondary: #3BB4FF;
+  --accent-soft: rgba(47, 91, 255, 0.15);
+  --accent-fg: #60A5FA;
+  --accent-glow: #9FD8FF;
 
   /* Status */
-  --success: #12805A;
-  --success-soft: rgba(18, 128, 90, 0.1);
-  --warning: #92600A;
-  --warning-soft: rgba(146, 96, 10, 0.1);
-  --danger: #C7333F;
-  --danger-soft: rgba(199, 51, 63, 0.09);
+  --success: #34D399;
+  --success-soft: rgba(52, 211, 153, 0.14);
+  --warning: #FBBF24;
+  --warning-soft: rgba(251, 191, 36, 0.14);
+  --danger: #F87171;
+  --danger-soft: rgba(248, 113, 113, 0.14);
 
-  /* Scrim behind a modal `<dialog>`. Dark in both themes — a light scrim
-   * over a light canvas reads as a rendering fault rather than as depth. */
-  --overlay: rgba(10, 12, 18, 0.45);
+  /* Scrim behind modal */
+  --overlay: rgba(2, 4, 10, 0.7);
+  --ring: rgba(59, 180, 255, 0.45);
 
-  --ring: rgba(41, 83, 216, 0.38);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 20px -2px rgba(5, 8, 22, 0.7);
+  --shadow-lg: 0 12px 32px -4px rgba(5, 8, 22, 0.85);
+  --shadow-accent: 0 0 20px rgba(47, 91, 255, 0.35);
+  --shadow-glow-accent: 0 0 30px rgba(59, 180, 255, 0.28);
 
-  /* Soft, cool-tinted elevation — never pure black. */
-  --shadow-sm: 0 1px 2px rgba(20, 22, 30, 0.05);
-  --shadow-md:
-    0 1px 2px rgba(20, 22, 30, 0.04), 0 10px 30px -10px rgba(20, 22, 30, 0.12);
-  --shadow-lg:
-    0 2px 4px rgba(20, 22, 30, 0.05), 0 24px 60px -16px rgba(20, 22, 30, 0.18);
-  /* Single dramatic accent shadow, used only under the primary button and
-   * the active nav pill. */
-  --shadow-accent: 0 1px 2px rgba(20, 22, 30, 0.06),
-    0 10px 28px -8px rgba(41, 83, 216, 0.28);
-  /* Softer, wider halo for hover-elevated cards - distinct from
-   * --shadow-accent (which marks the one committed action). */
-  --shadow-glow-accent: 0 1px 2px rgba(20, 22, 30, 0.05),
-    0 16px 40px -12px rgba(76, 125, 255, 0.22);
-
-  /* Glass chrome (nav, dropdowns, dialogs, sheets) - a translucent tint over
-   * backdrop-blur, with a hairline highlight for physical edge refraction. */
-  --glass-bg: rgba(255, 255, 255, 0.68);
-  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-bg: rgba(11, 17, 36, 0.75);
+  --glass-border: rgba(59, 180, 255, 0.12);
   --glass-blur-sm: 10px;
   --glass-blur-md: 20px;
   --glass-blur-lg: 40px;
 
-  /* Single source of truth for transition/animation durations - both CSS
-   * transitions and anime.js calls key off these so motion feels uniform. */
   --motion-instant: 75ms;
   --motion-fast: 150ms;
   --motion-normal: 300ms;
   --motion-slow: 600ms;
-
-  /* No overshoot — a settled iOS-style ease, not a bounce. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Populated by next/font in app/layout.tsx (self-hosted, no external
@@ -152,51 +135,48 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
 
-    --bg: #090B14;
-    --bg-subtle: #0D1018;
-    --surface: #12151F;
-    --surface-hover: #1A2030;
-    --surface-active: #212940;
+    --bg: #050816;
+    --bg-subtle: #080D20;
+    --surface: #0B1124;
+    --surface-hover: #121A33;
+    --surface-active: #192447;
 
-    --border: #2A3244;
-    --border-soft: #1D2434;
-    --border-strong: #3A4460;
+    --border: #1C2644;
+    --border-soft: #141c33;
+    --border-strong: #2a375f;
 
-    --fg: #F0F2F8;
-    --fg-muted: #8B95B7;
-    --fg-subtle: #5F6A85;
-    /* Deep navy on the bright dark-mode accent: white text on #5B8CFF is
-     * borderline on AA at UI text sizes, navy is safely dark enough. */
+    --fg: #F2F6FF;
+    --fg-muted: #8A97B8;
+    --fg-subtle: #627193;
     --fg-on-accent: #FFFFFF;
 
-    --accent: #4C6EF5;
-    --accent-hover: #3B5BDB;
-    --accent-soft: rgba(76, 110, 245, 0.12);
-    --accent-fg: #6D8DF7;
-    --accent-glow: #4C6EF5;
+    --accent: #2F5BFF;
+    --accent-hover: #264de3;
+    --accent-secondary: #3BB4FF;
+    --accent-soft: rgba(47, 91, 255, 0.15);
+    --accent-fg: #60A5FA;
+    --accent-glow: #9FD8FF;
 
-    --success: #12B886;
-    --success-soft: rgba(18, 184, 134, 0.12);
-    --warning: #F59F00;
-    --warning-soft: rgba(245, 159, 0, 0.12);
-    --danger: #FA5252;
-    --danger-soft: rgba(250, 82, 82, 0.12);
+    --success: #34D399;
+    --success-soft: rgba(52, 211, 153, 0.14);
+    --warning: #FBBF24;
+    --warning-soft: rgba(251, 191, 36, 0.14);
+    --danger: #F87171;
+    --danger-soft: rgba(248, 113, 113, 0.14);
 
-    --overlay: rgba(0, 0, 0, 0.55);
+    --overlay: rgba(2, 4, 10, 0.7);
 
-    --ring: rgba(76, 110, 245, 0.42);
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --ring: rgba(59, 180, 255, 0.45);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
     --shadow-md:
       0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px -10px rgba(0, 0, 0, 0.55);
     --shadow-lg:
       0 2px 4px rgba(0, 0, 0, 0.45), 0 26px 64px -16px rgba(0, 0, 0, 0.7);
-    --shadow-accent: 0 1px 2px rgba(0, 0, 0, 0.4),
-      0 10px 28px -8px rgba(76, 110, 245, 0.35);
-    --shadow-glow-accent: 0 1px 2px rgba(0, 0, 0, 0.4),
-      0 18px 44px -12px rgba(76, 110, 245, 0.25);
+    --shadow-accent: 0 0 20px rgba(47, 91, 255, 0.35);
+    --shadow-glow-accent: 0 0 30px rgba(59, 180, 255, 0.28);
 
-    --glass-bg: rgba(15, 18, 25, 0.68);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(11, 17, 36, 0.75);
+    --glass-border: rgba(59, 180, 255, 0.12);
     --glass-blur-sm: 10px;
     --glass-blur-md: 20px;
     --glass-blur-lg: 40px;
@@ -238,49 +218,48 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --bg: #090B14;
-  --bg-subtle: #0D1018;
-  --surface: #12151F;
-  --surface-hover: #1A2030;
-  --surface-active: #212940;
+  --bg: #050816;
+  --bg-subtle: #080D20;
+  --surface: #0B1124;
+  --surface-hover: #121A33;
+  --surface-active: #192447;
 
-  --border: #2A3244;
-  --border-soft: #1D2434;
-  --border-strong: #3A4460;
+  --border: #1C2644;
+  --border-soft: #141c33;
+  --border-strong: #2a375f;
 
-  --fg: #F0F2F8;
-  --fg-muted: #8B95B7;
-  --fg-subtle: #5F6A85;
+  --fg: #F2F6FF;
+  --fg-muted: #8A97B8;
+  --fg-subtle: #627193;
   --fg-on-accent: #FFFFFF;
 
-  --accent: #4C6EF5;
-  --accent-hover: #3B5BDB;
-  --accent-soft: rgba(76, 110, 245, 0.12);
-  --accent-fg: #6D8DF7;
-  --accent-glow: #4C6EF5;
+  --accent: #2F5BFF;
+  --accent-hover: #264de3;
+  --accent-secondary: #3BB4FF;
+  --accent-soft: rgba(47, 91, 255, 0.15);
+  --accent-fg: #60A5FA;
+  --accent-glow: #9FD8FF;
 
-  --success: #12B886;
-  --success-soft: rgba(18, 184, 134, 0.12);
-  --warning: #F59F00;
-  --warning-soft: rgba(245, 159, 0, 0.12);
-  --danger: #FA5252;
-  --danger-soft: rgba(250, 82, 82, 0.12);
+  --success: #34D399;
+  --success-soft: rgba(52, 211, 153, 0.14);
+  --warning: #FBBF24;
+  --warning-soft: rgba(251, 191, 36, 0.14);
+  --danger: #F87171;
+  --danger-soft: rgba(248, 113, 113, 0.14);
 
-  --overlay: rgba(0, 0, 0, 0.55);
+  --overlay: rgba(2, 4, 10, 0.7);
 
-  --ring: rgba(76, 110, 245, 0.42);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --ring: rgba(59, 180, 255, 0.45);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
   --shadow-md:
     0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 30px -10px rgba(0, 0, 0, 0.55);
   --shadow-lg:
     0 2px 4px rgba(0, 0, 0, 0.45), 0 26px 64px -16px rgba(0, 0, 0, 0.7);
-  --shadow-accent: 0 1px 2px rgba(0, 0, 0, 0.4),
-    0 10px 28px -8px rgba(76, 110, 245, 0.35);
-  --shadow-glow-accent: 0 1px 2px rgba(0, 0, 0, 0.4),
-    0 18px 44px -12px rgba(76, 110, 245, 0.25);
+  --shadow-accent: 0 0 20px rgba(47, 91, 255, 0.35);
+  --shadow-glow-accent: 0 0 30px rgba(59, 180, 255, 0.28);
 
-  --glass-bg: rgba(15, 18, 25, 0.68);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(11, 17, 36, 0.75);
+  --glass-border: rgba(59, 180, 255, 0.12);
   --glass-blur-sm: 10px;
   --glass-blur-md: 20px;
   --glass-blur-lg: 40px;
@@ -480,7 +459,11 @@ html {
 
 body {
   position: relative;
-  background: var(--bg);
+  background:
+    radial-gradient(circle at 50% 120%, rgba(47, 91, 255, 0.22), transparent 60%),
+    radial-gradient(circle at 50% -20%, rgba(59, 180, 255, 0.12), transparent 50%),
+    var(--bg);
+  min-height: 100vh;
   color: var(--fg);
   font-family: var(--font-sans);
   font-size: 16px;
@@ -488,6 +471,17 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Primary buttons with glowing gradient */
+.btn-primary, button[data-variant="primary"], button.bg-accent {
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(47, 91, 255, 0.35);
+}
+
+.btn-primary:hover, button[data-variant="primary"]:hover, button.bg-accent:hover {
+  box-shadow: 0 0 25px rgba(59, 180, 255, 0.45);
 }
 
 h1,

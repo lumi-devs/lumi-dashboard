@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef, useId } from "react";
+import { Popover as PopoverPrimitive } from "radix-ui";
+import { cn } from "#/lib/utils";
 
 interface MultiSelectOption {
   id: string;
@@ -64,74 +66,95 @@ export function MultiSelect({
   });
 
   return (
-    <div className="relative flex w-full flex-col gap-1.5">
-      <div
-        className="border-input bg-background focus-within:ring-ring flex min-h-9 w-full flex-wrap items-center gap-1 rounded-md border px-2 py-1 text-sm focus-within:ring-2 focus-within:ring-offset-2"
-        onClick={() => inputRef.current?.focus()}
-      >
-        {selectedLabels.map(({ id, label }) => (
-          <span
-            key={id}
-            className="bg-muted text-muted-foreground flex items-center gap-1 rounded px-1.5 py-0.5 text-xs"
+    <PopoverPrimitive.Root open={open && available.length > 0} onOpenChange={setOpen}>
+      <div className="relative flex w-full flex-col gap-1.5">
+        <PopoverPrimitive.Anchor asChild>
+          <div
+            className={cn(
+              "flex min-h-9 w-full flex-wrap items-center gap-1.5 rounded-control border border-border bg-surface px-2.5 py-1 text-sm transition-colors",
+              "focus-within:border-accent focus-within:ring-1 focus-within:ring-accent-secondary",
+            )}
+            onClick={() => inputRef.current?.focus()}
           >
-            {label}
-            <button
-              type="button"
-              aria-label={`Remove ${label}`}
+            {selectedLabels.map(({ id, label }) => (
+              <span
+                key={id}
+                className="flex items-center gap-1 rounded-[6px] border border-border bg-surface-hover px-2 py-0.5 text-xs text-fg"
+              >
+                {label}
+                <button
+                  type="button"
+                  aria-label={`Remove ${label}`}
+                  disabled={disabled}
+                  className="ml-0.5 text-fg-subtle hover:text-fg"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    remove(id);
+                  }}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+            <input
+              ref={inputRef}
+              type="text"
+              className="min-w-[6rem] flex-1 bg-transparent text-[14px] text-fg outline-none placeholder:text-fg-subtle"
+              placeholder={selectedLabels.length === 0 ? placeholder : ""}
+              aria-label={ariaLabel}
+              aria-controls={listId}
+              aria-expanded={open}
+              aria-autocomplete="list"
+              role="combobox"
               disabled={disabled}
-              className="hover:text-foreground ml-0.5 leading-none"
-              onClick={(e) => {
-                e.stopPropagation();
-                remove(id);
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setOpen(true);
               }}
+              onFocus={() => setOpen(true)}
+              onKeyDown={onKeyDown}
+            />
+          </div>
+        </PopoverPrimitive.Anchor>
+
+        <PopoverPrimitive.Portal>
+          <PopoverPrimitive.Content
+            side="bottom"
+            align="start"
+            sideOffset={4}
+            collisionPadding={8}
+            avoidCollisions={true}
+            onOpenAutoFocus={(e) => e.preventDefault()}
+            className={cn(
+              "z-50 w-[var(--radix-popover-trigger-width)] min-w-44 max-h-[var(--radix-popover-content-available-height,260px)]",
+              "overflow-hidden rounded-control border border-border bg-surface shadow-e3",
+              "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
+            )}
+          >
+            <ul
+              id={listId}
+              role="listbox"
+              className="max-h-56 overflow-y-auto p-1"
             >
-              ×
-            </button>
-          </span>
-        ))}
-        <input
-          ref={inputRef}
-          type="text"
-          className="min-w-[6rem] flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
-          placeholder={selectedLabels.length === 0 ? placeholder : ""}
-          aria-label={ariaLabel}
-          aria-controls={listId}
-          aria-expanded={open}
-          aria-autocomplete="list"
-          role="combobox"
-          disabled={disabled}
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setOpen(true);
-          }}
-          onFocus={() => setOpen(true)}
-          onBlur={() => setTimeout(() => setOpen(false), 150)}
-          onKeyDown={onKeyDown}
-        />
+              {available.map((opt) => (
+                <li
+                  key={opt.id}
+                  role="option"
+                  aria-selected={false}
+                  className="flex cursor-pointer items-center justify-between rounded-control px-2.5 py-1.5 text-[14px] text-fg transition-colors hover:bg-surface-hover"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    select(opt.id);
+                  }}
+                >
+                  {opt.label}
+                </li>
+              ))}
+            </ul>
+          </PopoverPrimitive.Content>
+        </PopoverPrimitive.Portal>
       </div>
-      {open && available.length > 0 && (
-        <ul
-          id={listId}
-          role="listbox"
-          className="border-border bg-popover absolute top-full z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-md border py-1 shadow-md"
-        >
-          {available.map((opt) => (
-            <li
-              key={opt.id}
-              role="option"
-              aria-selected={false}
-              className="hover:bg-accent cursor-pointer px-3 py-1.5 text-sm"
-              onMouseDown={(e) => {
-                e.preventDefault();
-                select(opt.id);
-              }}
-            >
-              {opt.label}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    </PopoverPrimitive.Root>
   );
 }
