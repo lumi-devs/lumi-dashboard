@@ -11,7 +11,7 @@ import {
   resolveConfigValue,
   type ModuleLabelIndex,
 } from "#/lib/config-labels";
-import { isShardHealthy, OfflineStatuses } from "#/components/system/shard-fleet";
+import { isShardHealthy, OfflineStatuses } from "#/lib/shard-health";
 import type { ConfigHistoryEntryView, DashboardChannelView, DashboardRoleView } from "@lumi/contracts/views";
 import type { RpcOutput } from "@lumi/contracts/rpc";
 

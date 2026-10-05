@@ -18,7 +18,7 @@ import { buildModuleLabelIndex } from "#/lib/config-labels";
 import { buildHealthChecks } from "#/lib/health-checks";
 import { buildSetupIssues } from "#/modules/setup/setup-issues";
 import { extractMemberNames } from "#/lib/log-format";
-import { isShardHealthy } from "#/components/system/shard-fleet";
+import { isShardHealthy } from "#/lib/shard-health";
 
 const FeedRows = 6;
 

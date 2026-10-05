@@ -44,15 +44,30 @@ Web management panel for **[Lumi](https://github.com/lumi-devs/Lumi)**. Configur
    # Session secret (generate with: openssl rand -hex 32)
    DASHBOARD_SESSION_SECRET=your-long-random-session-secret
 
+   # NextAuth / Auth.js Callback URL Configuration
+   # Required in production or containerized environments to prevent invalid_grant redirect mismatches:
+   AUTH_TRUST_HOST=true
+   AUTH_URL=http://localhost:3000
+   DASHBOARD_PUBLIC_URL=http://localhost:3000
+
    # Server config
-   DASHBOARD_PORT=8080
+   DASHBOARD_PORT=3000
    ```
 
 3. **Discord Developer Portal configuration:**
-   Add this callback URL under **OAuth2 → Redirects** in your Discord Application:
-   ```
-   http://localhost:8080/api/auth/callback/discord
-   ```
+   Under your application in the **Discord Developer Portal** (https://discord.com/developers/applications):
+   - Navigate to **OAuth2 → General**.
+   - Copy the **Client ID** into `DISCORD_OAUTH2_CLIENT_ID`.
+   - Under **Client Secret**, click **Reset Secret** and copy it into `DISCORD_OAUTH2_CLIENT_SECRET`.
+   - Under **Redirects**, add the following callback URLs:
+     - Dashboard authentication:
+       ```
+       http://<host-or-domain>:3000/api/auth/callback/discord
+       ```
+     - Bot invite redirection (optional):
+       ```
+       http://<host-or-domain>:3000/oauth/guild
+       ```
 
 4. **Run the development server:**
    ```bash

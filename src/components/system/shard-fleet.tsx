@@ -12,14 +12,10 @@ import { Table, TableScroll, TBody, TD, TH, THead, TR } from "#/components/ui/ta
 import { cn } from "#/lib/utils";
 import { since } from "#/lib/log-format";
 import { useStaggerIn } from "#/lib/animate";
+import { HealthyStatus, isShardHealthy, OfflineStatuses } from "#/lib/shard-health";
 
-export const HealthyStatus = "Ready";
-export const OfflineStatuses = new Set(["Disconnected", "Idle"]);
+export { HealthyStatus, isShardHealthy, OfflineStatuses };
 const SlowPingMs = 500;
-
-export function isShardHealthy(shard: { status: string; stale?: boolean }): boolean {
-  return shard.status.toLowerCase() === "ready" && !shard.stale;
-}
 
 function statusVariant(status: string) {
   if (status.toLowerCase() === "ready") return "success" as const;
