@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "bun:test";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import { FieldType, type ConfigField } from "@lumi/contracts";
 import { guildActionsMock } from "../setup";
 
@@ -115,10 +115,12 @@ describe("AntiNukeCard (schema-driven nuke matrix)", () => {
     expect(screen.getAllByText("—")).toHaveLength(3);
   });
 
-  it("edits trusted roles through the roles directory, not free text", () => {
+  it("edits trusted roles through the roles directory, not free text", async () => {
     renderCard();
     expect(screen.getByText("@Moderators")).toBeInTheDocument();
-    fireEvent.focus(screen.getByRole("combobox", { name: "Trusted Roles" }));
+    await act(async () => {
+      fireEvent.focus(screen.getByRole("combobox", { name: "Trusted Roles" }));
+    });
     expect(screen.getByRole("option", { name: "@Helpers" })).toBeInTheDocument();
     expect(screen.queryByText(/comma-separated/i)).not.toBeInTheDocument();
   });

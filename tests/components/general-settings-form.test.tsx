@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "bun:test";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
 import type { RpcInput } from "@lumi/contracts/rpc";
 import type { GuildSettings } from "@lumi/contracts/views";
 import { guildActionsMock } from "../setup";
@@ -202,13 +202,15 @@ describe("GeneralSettingsForm (cross-tab sync)", () => {
 describe("GeneralSettingsForm (locale)", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("shows the current locale and offers only the supported locales", () => {
+  it("shows the current locale and offers only the supported locales", async () => {
     render(<GeneralSettingsForm guildId="101" settings={makeSettings()} />);
 
     const localeField = screen.getByLabelText("Locale");
     expect(localeField).toHaveTextContent("en-US");
 
-    fireEvent.click(localeField);
+    await act(async () => {
+      fireEvent.click(localeField);
+    });
     expect(screen.getByRole("option", { name: "en-US" })).toBeInTheDocument();
     expect(screen.queryAllByRole("option")).toHaveLength(1);
   });
