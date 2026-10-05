@@ -72,6 +72,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${display.variable} ${mono.variable}`}
     >
+      <head>
+        <link rel="preconnect" href="https://cdn.discordapp.com" />
+        <link rel="dns-prefetch" href="https://cdn.discordapp.com" />
+      </head>
       <body className="font-sans antialiased">
         <QueryProvider>
           <ThemeProvider>

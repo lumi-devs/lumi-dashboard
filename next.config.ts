@@ -30,8 +30,33 @@ const nextConfig: NextConfig = {
   },
   // Leaving `experimental.serverActions.allowedOrigins` unset keeps Next's
   // built-in Server Action CSRF check strictly same-origin.
+  compress: true,
+  poweredByHeader: false,
   headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      {
+        source: "/:path*",
+        headers: securityHeaders,
+      },
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/(favicon.ico|manifest.webmanifest|icons/:path*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        ],
+      },
+    ];
   },
   turbopack: {
     root: import.meta.dirname,
