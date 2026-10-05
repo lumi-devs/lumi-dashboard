@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Lock, Radio, Unlock } from "lucide-react";
 import { Badge, StatusDot } from "#/components/ui/badge";
 import { EmptyState } from "#/components/ui/empty-state";
@@ -20,7 +22,15 @@ export function TempVcLiveChannels({
   channelNames: Record<string, string>;
   now: number;
 }) {
+  const router = useRouter();
   const liveChanRef = useStaggerIn<HTMLUListElement>("li");
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      router.refresh();
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [router]);
 
   if (records.length === 0) {
     return (

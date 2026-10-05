@@ -4,7 +4,6 @@ import { getGuildShell, getGuildEntities } from "#/lib/guild-reads";
 import { rpc } from "#/lib/rpc";
 import {
   TempVcGenerators,
-  TempVcPreviewPlayground,
   TempVcLiveChannels,
 } from "#/modules/tempvc/index";
 import { Badge } from "#/components/ui/badge";
@@ -19,6 +18,9 @@ import { EmptyState } from "#/components/ui/empty-state";
 import { PageHeader } from "#/components/ui/page-header";
 import { isVoiceChannel } from "#/lib/channel-types";
 import type { TempVcGeneratorView, TempVcRecordView } from "@lumi/contracts/views";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function TempVcPage({
   params,
@@ -115,27 +117,6 @@ export default async function TempVcPage({
       </div>
 
       <div className="rise" style={{ "--rise-delay": "140ms" } as React.CSSProperties}>
-        <Card>
-          <CardHeader>
-            <CardTitle>See it in action — edit it live</CardTitle>
-            <CardDescription>
-              Try a channel-name template and watch the voice row and control
-              panel update instantly.
-            </CardDescription>
-          </CardHeader>
-          <div className="p-4">
-            <TempVcPreviewPlayground
-              defaultTemplate={
-                typeof templateField?.default === "string"
-                  ? templateField.default
-                  : undefined
-              }
-            />
-          </div>
-        </Card>
-      </div>
-
-      <div className="rise" style={{ "--rise-delay": "210ms" } as React.CSSProperties}>
         <Card>
           <CardHeader
             actions={
