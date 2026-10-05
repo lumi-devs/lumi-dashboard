@@ -1,6 +1,6 @@
 # RPC Bridge & DTO Separation
 
-`lumi-dashboard` talks to Lumi's `apps/api` over an internal HTTP bridge. It never touches PostgreSQL, Redis, or Discord gateways directly.
+`lumi-dashboard` talks to Lumi's `apps/api` over an internal HTTP bridge. It never touches PostgreSQL, Valkey, or Discord gateways directly.
 
 ---
 

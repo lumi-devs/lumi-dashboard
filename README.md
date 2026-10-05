@@ -6,7 +6,7 @@ Web management panel for **[Lumi](https://github.com/lumi-devs/Lumi)**. Configur
 
 ## Highlights
 
-- **Isolated & Safe**: Talks exclusively to Lumi's internal API service via a typed RPC bridge. Never connects directly to PostgreSQL, Redis, or Discord.
+- **Isolated & Safe**: Talks exclusively to Lumi's internal API service via a typed RPC bridge. Never connects directly to PostgreSQL, Valkey, or Discord.
 - **Discord Sign-in**: Fast, secure login using standard Discord OAuth2.
 - **Dynamic Configuration**: Automatically builds settings panels from module schemas so features are always up to date.
 - **Modern Stack**: Built with Next.js (App Router), React, Tailwind CSS, and Radix UI.

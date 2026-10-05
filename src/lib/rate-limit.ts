@@ -3,7 +3,7 @@ import { RateLimiterMemory } from "rate-limiter-flexible";
 
 /**
  * In-memory rate limiting utility. Per Ground Rule 8, apps/dashboard must never
- * connect to Redis directly, so rate limits are not coordinated across replicas.
+ * connect to Valkey directly, so rate limits are not coordinated across replicas.
  */
 
 const limiters = new Map<string, RateLimiterMemory>();

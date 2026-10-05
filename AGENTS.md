@@ -13,8 +13,8 @@ For design systems, tokens, and component UI rules, consult [`DESIGN.md`](DESIGN
 
 ## 1. System Invariants & Trust Boundaries
 
-1. **Zero Database / Redis / Gateway Connections**:
-   This application never imports `pg`, `ioredis`, `@prisma/client`, or `discord.js` gateway clients. It holds no bot token.
+1. **Zero Database / Valkey / Gateway Connections**:
+   This application never imports `pg`, `iovalkey`, `ioredis`, `@prisma/client`, or `discord.js` gateway clients. It holds no bot token.
    All data reads, mutations, and actions route over the typed HTTP RPC bridge via `src/lib/rpc.ts`.
 2. **Server-Only Bridge**:
    `src/lib/rpc.ts` is guarded with `import "server-only"`. The client browser never communicates directly with Lumi's RPC port.

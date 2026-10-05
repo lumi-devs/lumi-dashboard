@@ -45,7 +45,7 @@ When you interact with us through the Services, we may collect information from 
 
 ### OTHER INFORMATION:
 
--   **Data We Collect Automatically**: When you interact with us through the Services, we receive and store certain information such as your activities within the Services, command usage, and module interactions. We may store such information or such information may be included in the databases owned and maintained by affiliates, agents or service providers (such as PostgreSQL and Redis instances).
+-   **Data We Collect Automatically**: When you interact with us through the Services, we receive and store certain information such as your activities within the Services, command usage, and module interactions. We may store such information or such information may be included in the databases owned and maintained by affiliates, agents or service providers (such as PostgreSQL and Valkey instances).
 -   **Cookies**: We may employ cookies and similar technologies on any affiliated web dashboards to keep track of your local computer's settings such as which account you have logged into.
 
 ## WHERE INFORMATION IS PROCESSED

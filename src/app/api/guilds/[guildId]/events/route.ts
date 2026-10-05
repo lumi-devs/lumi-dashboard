@@ -22,7 +22,7 @@ export async function GET(
     const upstreamRes = await fetch(upstream, {
       headers: env.rpcInternalToken ? { authorization: `Bearer ${env.rpcInternalToken}` } : {},
       // Ties the upstream apps/api connection's lifetime to this one, so a
-      // client tab closing tears down its Redis fan-out registration instead
+      // client tab closing tears down its Valkey fan-out registration instead
       // of leaking a connection until `apps/api`'s own idle detection kicks in.
       signal: request.signal,
     });
