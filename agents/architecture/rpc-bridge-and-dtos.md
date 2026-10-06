@@ -39,9 +39,11 @@ Application / Presentation UI
 
 ---
 
-## 3. Package Version Pinning Rule
+## 3. Package Versioning & Compatibility Handshake
 
-`package.json` pins `@lumi/contracts` and `@lumi/observability` to exact `npm:@lumi-devs/<pkg>@<version>`.
-- **Never loosen to ranges**: Do not use `^` or `~`.
-- **Incompatible Rejection**: `apps/api` validates contract versions at startup. Mismatched major/minor versions trigger immediate `CONTRACT_MISMATCH` fatal exceptions.
-- **Upgrading**: When Lumi cuts a new contracts release, update `package.json` to the exact version, run `bun install`, and verify with `bun run typecheck`.
+`package.json` pins `@lumi/contracts` and `@lumi/observability` to `npm:@lumi-devs/<pkg>@latest` or a specific release.
+- **Contract Version Handshake**: Every request carries header `x-lumi-contract-version`.
+- **Semver Range Compatibility**: `apps/api` resolves compatibility using semver ranges (`COMPATIBLE_CONTRACT_RANGE`, e.g. `>=MIN_COMPATIBLE_CONTRACT_VERSION <=CONTRACT_VERSION`).
+- **Backwards Compatibility**: Minor version bumps on the server do not break callers that fall within the server's supported compatibility range.
+- **Error Surfacing**: Mismatched versions trigger `409 CONTRACT_MISMATCH`, which `RpcClient` logs with details in both development and production.
+- **Upgrading**: When Lumi cuts a new contracts release, update `package.json` to the new version, run `bun install`, and verify with `bun run typecheck`.

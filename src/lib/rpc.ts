@@ -29,7 +29,11 @@ export function getRpcClient(): RpcClient {
       baseUrl: env.rpcHttpUrl,
       token: env.rpcInternalToken,
       logger: (msg) => {
-        if (env.isDevelopment) console.debug(msg);
+        if (msg.includes("Contract version mismatch") || msg.includes("malformed")) {
+          console.error(msg);
+        } else if (env.isDevelopment) {
+          console.debug(msg);
+        }
       },
       injectTraceHeaders: () => injectTraceContext(),
       // Only ever applied to the router's readOnly actions, so this only
