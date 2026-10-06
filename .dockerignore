@@ -4,4 +4,11 @@ node_modules
 coverage
 *.tsbuildinfo
 .git
-.env
+.env*
+.github
+agents
+docs
+*.md
+**/tests
+**/*.test.*
+**/*.spec.*
