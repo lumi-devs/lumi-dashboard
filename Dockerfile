@@ -1,10 +1,11 @@
 FROM docker.io/oven/bun:1-alpine AS base
 WORKDIR /app
-RUN apk upgrade --no-cache && apk add --no-cache dumb-init
+RUN apk add --no-cache dumb-init
 
 FROM base AS deps
 COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --frozen-lockfile
 
 FROM deps AS source
 COPY tsconfig.json next.config.ts postcss.config.mjs components.json ./

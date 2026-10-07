@@ -12,3 +12,5 @@ docs
 **/tests
 **/*.test.*
 **/*.spec.*
+*.log
+logs/
